@@ -1,3 +1,3 @@
 # sudoku
 
-http://luffm.github.io/sudoku
+https://luffm.github.io/sudoku
