@@ -192,6 +192,7 @@ function Cell(s = '') { // String
 
   // Initialise with s
   this.setBits(s);
+
 }
 
 
