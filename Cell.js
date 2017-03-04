@@ -11,8 +11,8 @@ function Cell(s = '') { // String
   this.rowIndex = -1;         // int
   this.colIndex = -1;         // int
   this.boxIndex = -1;         // int
-  this.fixed = false;         // boolean
-  this.finalised = false;     // boolean
+  this.fixed = false;         // boolean - fixed cells cannot be changed
+  this.finalised = false;     // boolean - finalised cell has 1 bit set
 
   this.setBits = function(s) {  // String
     if (s == '') s = "123456789";

@@ -274,6 +274,11 @@ To set up the grid highlight the grid cells using the left mouse button and type
 </body>
 
 <script type="text/javascript">
+
+  // ---------------------------------------------------------------------------
+  // Set up static global variables
+  // ---------------------------------------------------------------------------
+
   var R = 0;
   var C = 1;
   var B = 2;
@@ -282,6 +287,10 @@ To set up the grid highlight the grid cells using the left mouse button and type
   var UNSETBIT     = 2;
   var SETALLBITS   = 3;
   var UNSETALLBITS = 4;
+
+  level_element = document.getElementById("level");
+  position_element = document.getElementById("position");
+
 </script>
 
 <script src="Cell.js"></script>
@@ -293,25 +302,16 @@ To set up the grid highlight the grid cells using the left mouse button and type
 
 <script type="text/javascript">
 
-  // Create new puzzle
+
+  // ---------------------------------------------------------------------------
+  // Create new Sudoku object
+  // ---------------------------------------------------------------------------
+
   var sudoku = new Sudoku();
-/*
-  sudoku.locked = true;
-  sudoku.creating = true;
-  var level; // int
-  do {
-    level = sudoku.newPuzzle();
-    sudoku.steps = [];
-  } while (level != sudoku.newLevel);
 
-  sudoku.valid = sudoku.grid.isValid();
-  sudoku.saveGrid();
-  sudoku.creating = false;
-  sudoku.locked = false;
-
-  sudoku.paint();
-  //alert(sudoku.grid);
-*/
+  // ---------------------------------------------------------------------------
+  // Handle key presses
+  // ---------------------------------------------------------------------------
 
   window.addEventListener("keyup", function (event) {
 
@@ -319,33 +319,79 @@ To set up the grid highlight the grid cells using the left mouse button and type
       return; // Do nothing if the event was already processed
     }
 
+    if (sudoku.selection != -1) {
+      // DEAL WITH SELECTION CASES
+
+      var cell = sudoku.grid.getCellRef(sudoku.selection);
+
+      switch (event.key.toUpperCase()) {
+        case "SPACEBAR":
+        case " ":
+          if (!cell.isFixed()) {
+            var id = '' + sudoku.selection;
+            id = "c"+"00".substring(id.length) + id;
+            document.getElementById(id).innerHTML = '';
+          }
+          break;
+
+        case "1":
+        case "2":
+        case "3":
+        case "4":
+        case "5":
+        case "6":
+        case "7":
+        case "8":
+        case "9":
+          if (!cell.isFixed()) {
+            var bit = parseInt(event.key)-1;
+            if (cell.isBitSet(bit)) {
+              if (cell.count() == 1 && !cell.isFinalised()) {
+                // Change from bit display to finalised number display
+                cell.finaliseCell();
+
+                var id = '' + sudoku.selection;
+                id = "c"+"00".substring(id.length) + id;
+                document.getElementById(id).innerHTML = event.key;
+              } else {
+                // Unset bit
+                cell.unfinaliseCell();
+                cell.unsetBit(bit);
+              }
+            } else {
+              // Set bit
+              cell.unfinaliseCell();
+              cell.setBit(bit);
+            }
+          }
+          //alert("changed cell="+cell);
+          break;
+
+        default:
+          break;
+      }
+    } else {
+      // DEAL WITH NON-SELECTION CASES
+
+    }
+
+    // DEAL WITH OTHER CASES
+
     switch (event.key.toUpperCase()) {
-      case "SPACEBAR":
-      case " ":
-        document.getElementById("c00").innerHTML = "";
-        break;
-      case "1":
-      case "2":
-      case "3":
-      case "4":
-      case "5":
-      case "6":
-      case "7":
-      case "8":
-      case "9":
-        document.getElementById("c00").innerHTML = event.key;
-        break;
+
 
       case "S": // Save Position
         sudoku.saveGrid();
+        position_element.innerHTML = (sudoku.historyIndex + 1) + "/" + sudoku.history.length;
         break;
 
       case "T": // Toggle level
         sudoku.newLevel = (sudoku.newLevel % 4) + 1;
-        document.getElementById("level").innerHTML = sudoku.levelToText(sudoku.newLevel);
+        level_element.innerHTML = sudoku.levelToText(sudoku.newLevel);
         break;
 
       case "W": // Attempt to Solve with Methods
+        sudoku.selection = -1;
         //sudoku.solveAll();
         //sudoku.doSteps();
         //sudoku.locked = false;
@@ -354,7 +400,7 @@ To set up the grid highlight the grid cells using the left mouse button and type
 
       case "X": // Key X - create new puzzle
         // Create new puzzle
-        //sudoku = new Sudoku();
+        sudoku.selection = -1;
         sudoku.locked = true;
         sudoku.creating = true;
         var level; // int
@@ -365,6 +411,7 @@ To set up the grid highlight the grid cells using the left mouse button and type
 
         sudoku.valid = sudoku.grid.isValid();
         sudoku.saveGrid();
+        position_element.innerHTML = (sudoku.historyIndex + 1) + "/" + sudoku.history.length;
         sudoku.creating = false;
         sudoku.locked = false;
 
@@ -374,11 +421,13 @@ To set up the grid highlight the grid cells using the left mouse button and type
         break;
 
       case "Y": // Clear Grid
+        sudoku.selection = -1;
         sudoku.clearGrid();
         sudoku.paint();
         break;
 
       case "Z": // Fix/Unfix Grid
+        sudoku.selection = -1;
         var isFixed = false; // boolean
         for (var i = 0; i < 81; i++) {
           if (sudoku.grid.getCellRef(i).isFixed()) {

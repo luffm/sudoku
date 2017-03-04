@@ -254,7 +254,7 @@ function Sudoku() {
 //alert(this.grid);
 
     while(!complete) {
-      this.saveGrid();
+      //this.saveGrid();
       var backup = new History(this.grid, -1);
 
       var rand;
