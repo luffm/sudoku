@@ -71,8 +71,20 @@ function Sudoku() {
     } else if (cell.count() == 1 && cell.isFinalised()) {
       elem.innerHTML = '' + (cell.firstSetBit() + 1);
     } else {
-      // Display set bits
-      elem.innerHTML = cell;
+      var bit_html = '<table class="bitcellframe">';
+      for (var bit = 0; bit < 9; bit++) {
+        // Display set bits
+        if (bit % 3 == 0) bit_html += "<tr>";
+        bit_html += '<td class="bitcell">';
+        if (cell.isBitSet(bit)) {
+          bit_html += (bit + 1);
+        }
+        bit_html += "</td>";
+        if (bit % 3 == 2) bit_html += "</tr>";
+      }
+      bit_html += "</table>";
+      elem.innerHTML = bit_html;
+      //alert(bit_html);
     }
 
   }
@@ -108,50 +120,47 @@ function Sudoku() {
   // CARRY OUT STEPS
   //----------------------------------------------------------------------------
 
-/*
-  private void doSteps() {
-    if (steps.size() > 0) {
-
+  this.doSteps = function() {
+    if (this.steps.length > 0) {
       // Restore backup
-      grid = new Grid(backup.numbers);
-      for (int i = 0; i < 81; i++) {
-        if (backup.fixes[i]) grid.getCellRef(i).fixCell();
-        if (backup.finalisations[i]) grid.getCellRef(i).finaliseCell();
+      this.grid = new Grid(this.backup.numbers);
+      for (var i = 0; i < 81; i++) {
+        if (this.backup.fixes[i]) this.grid.getCellRef(i).fixCell();
+        if (this.backup.finalisations[i]) this.grid.getCellRef(i).finaliseCell();
       }
 
-      grid.initialise();
+      this.grid.initialise();
 
-      stepping = false;
-      quit = false;
-      while (steps.size() > 0) {
-        if (stepping) {
-          System.out.println(steps.get(0));
-          for (Action action : steps.get(0).actions) {
-            action.execute(grid);
+      //this.stepping = false;
+      //this.quit = false;
+      //alert(this.steps);
+      while (this.steps.length > 0) {
+        //if (this.stepping) {
+          //alert(this.steps[0]);
+          for (var act_i = 0; act_i < this.steps[0].actions.length; act_i++) {
+            var action = this.steps[0].actions[act_i];
+            //alert(action);
+            action.execute(this.grid);
           }
-          valid = grid.isValid();
-          steps.remove(0);
-          stepping = false;
-        } else if (quit) {
-          System.out.println(steps.get(0));
-          for (Action action : steps.get(0).actions) {
-            action.execute(grid);
-          }
-          valid = grid.isValid();
-          steps.clear();
-        }
+          this.valid = this.grid.isValid();
+          this.steps.shift();
+          //this.stepping = false;
+        //} else if (this.quit) {
+        //  alert(this.steps[0]);
+        //  for (var act_i = 0; act_i < this.steps[0].actions.length; act_i++) {
+        //    var action = this.steps[0].actions[act_i];
+        //    action.execute(this.grid);
+        //  }
+        //  this.valid = this.grid.isValid();
+        //  this.steps = [];
+        //}
         // ADD A SLEEP FUNCTION HERE!
-        Thread t = Thread.currentThread();
-        try {
-          t.sleep(50);
-        } catch (InterruptedException e) {
-        }
+        //alert("sleep for 50ms")
       }
 
-      saveGrid();
+      this.saveGrid();
     }
   }
-*/
 
   //----------------------------------------------------------------------------
   // ADD A LIST OF STEPS TO MAIN STEPS LIST
@@ -345,7 +354,7 @@ function Sudoku() {
   //----------------------------------------------------------------------------
 
   this.restoreGrid = function() { // (void)->void
-    var h = history.get(historyIndex); // History
+    var h = this.history[this.historyIndex]; // History
     this.grid = new Grid(h.numbers);
     // fix grid
     for (var i = 0; i < 81; i++) {
@@ -370,7 +379,7 @@ function Sudoku() {
   //----------------------------------------------------------------------------
 
   this.nextGrid = function() { // (void)->void
-    if (this.historyIndex < this.history.size()-1) this.historyIndex++;
+    if (this.historyIndex < this.history.length-1) this.historyIndex++;
     this.restoreGrid();
   }
 
@@ -397,7 +406,5 @@ function Sudoku() {
   this.makeBlanks();
   this.saveGrid();
   this.paint();
-
-
 
 } // End of Sudoku object

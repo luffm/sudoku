@@ -16,6 +16,11 @@
       border-collapse: separate;
       border:1px solid black;
     }
+    table.bitcellframe {
+      border-spacing: 0px;
+      border-collapse: separate;
+      border:0px;
+    }
     td.box {padding:0; margin:0;}
     td.cell {
       padding:0;
@@ -25,6 +30,15 @@
       height: 53px;
       text-align: center;
       font-size: xx-large;
+    }
+    td.bitcell {
+      padding:0;
+      margin:0;
+      border: 0px;
+      width: 17px;
+      height: 17px;
+      text-align: center;
+      font-size: small;
     }
     td.pad {
       background-color: #AAAAAA;
@@ -348,41 +362,6 @@
   var sudoku = new Sudoku();
 
   // ---------------------------------------------------------------------------
-  // Draw cell
-  // ---------------------------------------------------------------------------
-
-  function drawCell(cell) {
-    var index = cell.getGridIndex();
-    //alert("drawCell: index=" + index + " cell=" + cell + "sudoku.selection=" + sudoku.selection);
-
-    var id = '' + index;
-    id = "c"+"00".substring(id.length) + id;
-
-    var elem = document.getElementById(id);
-
-    // Background colour
-    if (index == sudoku.selection) {
-      elem.setAttribute("style", "background-color: yellow;");
-    } else if (cell.isFixed()) {
-      elem.setAttribute("style", "background-color: #DDDDDD;");
-    } else {
-      elem.setAttribute("style", "background-color: white;");
-    }
-
-    //if (cell.count() == 1 && !cell.isFinalised()) {
-
-    if (cell.count() == 0) {
-      elem.innerHTML = '';
-    } else if (cell.count() == 1 && cell.isFinalised()) {
-      elem.innerHTML = '' + (cell.firstSetBit() + 1);
-    } else {
-      // Display set bits
-      elem.innerHTML = cell;
-    }
-
-  }
-
-  // ---------------------------------------------------------------------------
   // Handle key presses
   // ---------------------------------------------------------------------------
 
@@ -406,7 +385,7 @@
             } else if (cell.count() == 1) {
               cell.finaliseCell();
             }
-            drawCell(cell);
+            sudoku.drawCell(cell);
           }
           break;
 
@@ -420,7 +399,7 @@
         case "8":
         case "9":
           cell.processBit(parseInt(event.key)-1);
-          drawCell(cell);
+          sudoku.drawCell(cell);
           break;
 
         default:
@@ -467,10 +446,10 @@
 
         var prev_cell = sudoku.grid.getCellRef(sudoku.selection);
         sudoku.selection = selection;
-        drawCell(prev_cell);
+        sudoku.drawCell(prev_cell);
       }
 
-      drawCell(cell);
+      sudoku.drawCell(cell);
     }
   }
 
@@ -487,9 +466,35 @@
         var bit = parseInt(id.substr(3)) - 1;
         var cell = sudoku.grid.getCellRef(sudoku.selection);
         cell.processBit(bit);
-        drawCell(cell);
+        sudoku.drawCell(cell);
       }
     }
+  }
+
+  document.getElementById("inpA").onclick = function() {
+    if (sudoku.selection != -1) {
+      var cell = sudoku.grid.getCellRef(sudoku.selection);
+      if (!cell.isFixed()) {
+        cell.setAllBits();
+        cell.unfinaliseCell();
+        sudoku.drawCell(cell);
+      }
+    }
+  }
+
+  document.getElementById("inpC").onclick = function() {
+    if (sudoku.selection != -1) {
+      var cell = sudoku.grid.getCellRef(sudoku.selection);
+      if (!cell.isFixed()) {
+        cell.unsetAllBits();
+        cell.unfinaliseCell();
+        sudoku.drawCell(cell);
+      }
+    }
+  }
+
+  document.getElementById("inpN").onclick = function() {
+    alert("Not yet implemented");
   }
 
   // ---------------------------------------------------------------------------
@@ -539,9 +544,26 @@
 
   document.getElementById("actSlv").onclick = function() {
     sudoku.selection = -1;
-    //sudoku.solveAll();
-    //sudoku.doSteps();
-    //sudoku.locked = false;
+
+    sudoku.locked = true; // Lock user actions until further notice
+
+    // Save grid if user made a change since last history
+    if (!(new History(sudoku.grid, sudoku.level)).equals(sudoku.history[sudoku.historyIndex])) sudoku.saveGrid();
+
+    // Store backup of current grid - will be reinstated after solving
+    sudoku.backup = new History(sudoku.grid, -1);
+
+    // Ensure cell bits are initialised before running any solving method
+    sudoku.grid.initialise();
+
+    // Count the number of values left to solve
+    //alert(sudoku.grid.remaining());
+
+    sudoku.solveAll();
+    sudoku.doSteps();
+    position_element.innerHTML = (sudoku.historyIndex + 1) + "/" + sudoku.history.length;
+
+    sudoku.locked = false;
     sudoku.paint();
   }
 
@@ -575,6 +597,35 @@
     }
     sudoku.paint();
   }
+
+  // ---------------------------------------------------------------------------
+  // Set up handling of Previous Position button
+  // ---------------------------------------------------------------------------
+
+  document.getElementById("actPrv").onclick = function() {
+    // Save grid if user made a change since last history
+    if (!(new History(sudoku.grid, sudoku.level)).equals(sudoku.history[sudoku.historyIndex])) sudoku.saveGrid();
+
+    sudoku.prevGrid();
+    position_element.innerHTML = (sudoku.historyIndex + 1) + "/" + sudoku.history.length;
+    sudoku.paint();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Set up handling of Next Position button
+  // ---------------------------------------------------------------------------
+
+  document.getElementById("actNxt").onclick = function() {
+    // Save grid if user made a change since last history
+    if (!(new History(sudoku.grid, sudoku.level)).equals(sudoku.history[sudoku.historyIndex])) sudoku.saveGrid();
+
+    sudoku.nextGrid();
+    position_element.innerHTML = (sudoku.historyIndex + 1) + "/" + sudoku.history.length;
+    sudoku.paint();
+  }
+
+
+
 
 </script>
 

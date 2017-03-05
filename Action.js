@@ -22,4 +22,16 @@ function Action(index, command, bit) { // (int, int, int)
       cell.unfinaliseCell();
     }
   }
+
+  this.toString = function() { // returns String
+    var cmd;
+    switch (this.command) {
+      case SETBIT:       cmd = "SETBIT"; break;
+      case UNSETBIT:     cmd = "UNSETBIT"; break;
+      case SETALLBITS:   cmd = "SETALLBITS"; break;
+      case UNSETALLBITS: cmd = "UNSETALLBITS"; break;
+      default: break;
+    }
+    return "Action: index=" + this.index + " command=" + cmd + " bit=" + this.bit;
+  }
 }
