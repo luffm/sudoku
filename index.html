@@ -384,7 +384,6 @@ To set up the grid highlight the grid cells using the left mouse button and type
       elem.innerHTML = cell;
     }
 
-    return;
   }
 
   // ---------------------------------------------------------------------------
@@ -424,22 +423,7 @@ To set up the grid highlight the grid cells using the left mouse button and type
         case "7":
         case "8":
         case "9":
-          if (!cell.isFixed()) {
-            var bit = parseInt(event.key)-1;
-            if (cell.count() == 0) {
-              cell.setBit(bit);
-              cell.finaliseCell();
-            } else if (cell.isBitSet(bit)) {
-                if (cell.isFinalised()) {
-                  cell.unfinaliseCell();
-                } else {
-                  cell.unsetBit(bit);
-                }
-            } else {
-              cell.unfinaliseCell();
-              cell.setBit(bit);
-            }
-          }
+          cell.processBit(parseInt(event.key)-1);
           drawCell(cell);
           break;
 
@@ -451,77 +435,6 @@ To set up the grid highlight the grid cells using the left mouse button and type
 
     }
 
-    // DEAL WITH OTHER CASES
-
-    switch (event.key.toUpperCase()) {
-
-
-      case "S": // Save Position
-        sudoku.saveGrid();
-        position_element.innerHTML = (sudoku.historyIndex + 1) + "/" + sudoku.history.length;
-        break;
-
-      case "T": // Toggle level
-        sudoku.newLevel = (sudoku.newLevel % 4) + 1;
-        level_element.innerHTML = sudoku.levelToText(sudoku.newLevel);
-        break;
-
-      case "W": // Attempt to Solve with Methods
-        sudoku.selection = -1;
-        //sudoku.solveAll();
-        //sudoku.doSteps();
-        //sudoku.locked = false;
-        sudoku.paint();
-        break;
-
-      case "X": // Key X - create new puzzle
-        // Create new puzzle
-        sudoku.selection = -1;
-        sudoku.locked = true;
-        sudoku.creating = true;
-        var level; // int
-        do {
-          level = sudoku.newPuzzle();
-          sudoku.steps = [];
-        } while (level != sudoku.newLevel);
-
-        sudoku.valid = sudoku.grid.isValid();
-        sudoku.saveGrid();
-        position_element.innerHTML = (sudoku.historyIndex + 1) + "/" + sudoku.history.length;
-        sudoku.creating = false;
-        sudoku.locked = false;
-
-        sudoku.paint();
-        //alert(sudoku.grid);
-
-        break;
-
-      case "Y": // Clear Grid
-        sudoku.selection = -1;
-        sudoku.clearGrid();
-        sudoku.paint();
-        break;
-
-      case "Z": // Fix/Unfix Grid
-        sudoku.selection = -1;
-        var isFixed = false; // boolean
-        for (var i = 0; i < 81; i++) {
-          if (sudoku.grid.getCellRef(i).isFixed()) {
-            isFixed = true;
-            break;
-          }
-        }
-        if (isFixed) {
-          sudoku.grid.unfix();
-        } else {
-          sudoku.grid.fix();
-        }
-        sudoku.paint();
-        break;
-
-      default:
-        return; // Quit when this doesn't handle the key event.
-    }
     // Cancel the default action to avoid it being handled twice
     event.preventDefault();
   }, true);
@@ -565,34 +478,106 @@ To set up the grid highlight the grid cells using the left mouse button and type
     }
   }
 
+  // ---------------------------------------------------------------------------
+  // Set up handling of number pad selections
+  // ---------------------------------------------------------------------------
+
   for (var i = 1; i <= 9; i++) {
     var id = "inp" + i;
 
     document.getElementById(id).onclick = function() {
       if (sudoku.selection != -1) {
+        var id = this.getAttribute("id");
+        var bit = parseInt(id.substr(3)) - 1;
         var cell = sudoku.grid.getCellRef(sudoku.selection);
-        if (!cell.isFixed()) {
-          var id = this.getAttribute("id");
-          var bit = parseInt(id.substr(3)) - 1;
-
-          if (cell.count() == 0) {
-            cell.setBit(bit);
-            cell.finaliseCell();
-          } else if (cell.isBitSet(bit)) {
-              if (cell.isFinalised()) {
-                cell.unfinaliseCell();
-              } else {
-                cell.unsetBit(bit);
-              }
-          } else {
-            cell.unfinaliseCell();
-            cell.setBit(bit);
-          }
-
-          drawCell(cell);
-        }
+        cell.processBit(bit);
+        drawCell(cell);
       }
     }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Set up handling of Create New Puzzle button
+  // ---------------------------------------------------------------------------
+
+  document.getElementById("actNew").onclick = function() {
+    sudoku.selection = -1;
+    sudoku.locked = true;
+    sudoku.creating = true;
+    var level; // int
+    do {
+      level = sudoku.newPuzzle();
+      sudoku.steps = [];
+    } while (level != sudoku.newLevel);
+
+    sudoku.valid = sudoku.grid.isValid();
+    sudoku.saveGrid();
+    position_element.innerHTML = (sudoku.historyIndex + 1) + "/" + sudoku.history.length;
+    sudoku.creating = false;
+    sudoku.locked = false;
+
+    sudoku.paint();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Set up handling of Toggle Level button
+  // ---------------------------------------------------------------------------
+
+  document.getElementById("actLvl").onclick = function() {
+    sudoku.newLevel = (sudoku.newLevel % 4) + 1;
+    level_element.innerHTML = sudoku.levelToText(sudoku.newLevel);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Set up handling of Save Position button
+  // ---------------------------------------------------------------------------
+
+  document.getElementById("actSav").onclick = function() {
+    sudoku.saveGrid();
+    position_element.innerHTML = (sudoku.historyIndex + 1) + "/" + sudoku.history.length;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Set up handling of Solve button
+  // ---------------------------------------------------------------------------
+
+  document.getElementById("actSlv").onclick = function() {
+    sudoku.selection = -1;
+    //sudoku.solveAll();
+    //sudoku.doSteps();
+    //sudoku.locked = false;
+    sudoku.paint();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Set up handling of Clear Grid button
+  // ---------------------------------------------------------------------------
+
+  document.getElementById("actClr").onclick = function() {
+    sudoku.selection = -1;
+    sudoku.clearGrid();
+    sudoku.paint();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Set up handling of Fix/Unfix Grid button
+  // ---------------------------------------------------------------------------
+
+  document.getElementById("actFix").onclick = function() {
+    sudoku.selection = -1;
+    var isFixed = false; // boolean
+    for (var i = 0; i < 81; i++) {
+      if (sudoku.grid.getCellRef(i).isFixed()) {
+        isFixed = true;
+        break;
+      }
+    }
+    if (isFixed) {
+      sudoku.grid.unfix();
+    } else {
+      sudoku.grid.fix();
+    }
+    sudoku.paint();
   }
 
 </script>

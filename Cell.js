@@ -190,6 +190,26 @@ function Cell(s = '') { // String
     }
   }
 
+  this.processBit = function(bit) { // (int)->void
+    if (!this.isFixed()) {
+      if (this.count() == 0) {
+        this.setBit(bit);
+        this.finaliseCell();
+      } else if (this.isBitSet(bit)) {
+          if (this.isFinalised()) {
+            this.unfinaliseCell();
+          } else {
+            this.unsetBit(bit);
+          }
+      } else {
+        this.unfinaliseCell();
+        this.setBit(bit);
+      }
+    }
+  }
+
+
+
   // Initialise with s
   this.setBits(s);
 

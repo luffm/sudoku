@@ -42,33 +42,49 @@ function Sudoku() {
     }
   }
 
+  // ---------------------------------------------------------------------------
+  // Draw cell
+  // ---------------------------------------------------------------------------
+
+  this.drawCell = function(cell) {
+    var index = cell.getGridIndex();
+    //alert("drawCell: index=" + index + " cell=" + cell + "sudoku.selection=" + sudoku.selection);
+
+    var id = '' + index;
+    id = "c"+"00".substring(id.length) + id;
+
+    var elem = document.getElementById(id);
+
+    // Background colour
+    if (index == this.selection) {
+      elem.setAttribute("style", "background-color: yellow;");
+    } else if (cell.isFixed()) {
+      elem.setAttribute("style", "background-color: #DDDDDD;");
+    } else {
+      elem.setAttribute("style", "background-color: white;");
+    }
+
+    //if (cell.count() == 1 && !cell.isFinalised()) {
+
+    if (cell.count() == 0) {
+      elem.innerHTML = '';
+    } else if (cell.count() == 1 && cell.isFinalised()) {
+      elem.innerHTML = '' + (cell.firstSetBit() + 1);
+    } else {
+      // Display set bits
+      elem.innerHTML = cell;
+    }
+
+  }
+
+  // ---------------------------------------------------------------------------
+  // Paint grid
+  // ---------------------------------------------------------------------------
+
   this.paint = function() { // (void)->void
-
     for (var i = 0; i < 81; i++) {
-      var cell = this.grid.getCell(i); // String
-      var cellRef = this.grid.getCellRef(i); // Cell
-      var id = '' + i;
-      id = "c"+"00".substring(id.length) + id;
-
-      elem = document.getElementById(id);
-
-      if (cellRef.isFixed()) {
-        elem.setAttribute("style", "background-color: #DDDDDD;");
-      } else {
-        elem.setAttribute("style", "background-color: white;");
-      }
-
-      if (this.digitCount(cell) == 1 /*&& cellRef.isFinalised()*/) {
-        elem.innerHTML = cell.replace(/-/g, '');
-      } else if (this.digitCount(cell) == 0) {
-        elem.innerHTML = '';
-      } else {
-        //offscr.setFont(new Font("Dialog", Font.PLAIN, 12));
-        //offscr.setColor(Color.blue);
-        for (var j = 0; j < cell.length; j++) {
-          var ch = cell.charAt(j); // char
-        }
-      }
+      var cell = this.grid.getCellRef(i); // Cell
+      this.drawCell(cell);
     }
   }
 
