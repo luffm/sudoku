@@ -25,7 +25,26 @@
       height: 53px;
       text-align: center;
       font-size: xx-large;
-      background-color: white;
+    }
+    td.pad {
+      background-color: #AAAAAA;
+      font-size: xx-large;
+    }
+    td.pad2 {
+      background-color: #AAAAAA;
+      font-size: large;
+    }
+    td.button {
+      padding:0;
+      margin:0;
+      border: 1px solid black;
+      width: 206px;
+      height: 45px;
+      text-align: center;
+      font-size: large;
+    }
+    td.button2 {
+      width: 103px;
     }
   </style>
 
@@ -245,31 +264,54 @@ To set up the grid highlight the grid cells using the left mouse button and type
   </tr>
 </table></td>
 
-<td><table>
+<!-- 3box x 3box table -->
+<td><table class="frame">
+  <!-- First Row -->
+  <tr>
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell pad" id="inp7">7</td>
+          <td class="cell pad" id="inp8">8</td>
+          <td class="cell pad" id="inp9">9</td>
+          <td class="cell pad2" id="inpA">All</td>
+        </tr>
+        <tr>
+          <td class="cell pad" id="inp4">4</td>
+          <td class="cell pad" id="inp5">5</td>
+          <td class="cell pad" id="inp6">6</td>
+          <td class="cell pad2" id="inpC">Clear</td>
+        </tr>
+        <tr>
+          <td class="cell pad" id="inp1">1</td>
+          <td class="cell pad" id="inp2">2</td>
+          <td class="cell pad" id="inp3">3</td>
+          <td class="cell pad2" id="inpN"></td>
+        </tr>
+        <tr><td class="button pad2" id="actNew" colspan="4">Create New Puzzle</td></tr>
+        <tr><td class="button pad2" id="actLvl" colspan="4">Toggle Level (<span id="level">Easy</span>)</td></tr>
+        <tr><td class="button pad2" id="actSav" colspan="4">Save Position (<span id="position">1/1</span>)</td></tr>
+        <tr>
+          <td class="button button2 pad2" id="actPrv" colspan="2">&lt;</td>
+          <td class="button button2 pad2" id="actNxt" colspan="2">&gt;</td>
+        </tr>
+        <tr><td class="button pad2" id="actSlv" colspan="4">Solve</td></tr>
+        <tr><td class="button pad2" id="actClr" colspan="4">Clear Grid</td></tr>
+        <tr><td class="button pad2" id="actFix" colspan="4">Fix/Unfix Grid</td></tr>
+      </table>
+    </td>
+  </tr>
 
-  <tr><td>
-    KEY COMMANDS<br/>
-  </td></tr>
-  <tr><td>
-    X: Create New Puzzle (<span id="level">Easy</span>)<br/>
-    T: Toggle level<br/>
-  </td></tr>
-  <tr><td>
-    S: Save Position<br/>
-    &nbsp;Current Position: <span id="position">1/1</span><br/>
-  </td></tr>
-  <tr><td>
-    W: Attempt to Solve with Methods</br>
-  </td></tr>
-  <tr><td>
-    Y: Clear Grid<br/>
-    Z: Fix/Unfix Grid<br/>
-  </td></tr>
 </table></td>
 
-
-
 </tr></table>
+
+
+
+
+
+
 
 </body>
 
@@ -310,6 +352,42 @@ To set up the grid highlight the grid cells using the left mouse button and type
   var sudoku = new Sudoku();
 
   // ---------------------------------------------------------------------------
+  // Draw cell
+  // ---------------------------------------------------------------------------
+
+  function drawCell(cell) {
+    var index = cell.getGridIndex();
+    //alert("drawCell: index=" + index + " cell=" + cell + "sudoku.selection=" + sudoku.selection);
+
+    var id = '' + index;
+    id = "c"+"00".substring(id.length) + id;
+
+    var elem = document.getElementById(id);
+
+    // Background colour
+    if (index == sudoku.selection) {
+      elem.setAttribute("style", "background-color: yellow;");
+    } else if (cell.isFixed()) {
+      elem.setAttribute("style", "background-color: #DDDDDD;");
+    } else {
+      elem.setAttribute("style", "background-color: white;");
+    }
+
+    //if (cell.count() == 1 && !cell.isFinalised()) {
+
+    if (cell.count() == 0) {
+      elem.innerHTML = '';
+    } else if (cell.count() == 1 && cell.isFinalised()) {
+      elem.innerHTML = '' + (cell.firstSetBit() + 1);
+    } else {
+      // Display set bits
+      elem.innerHTML = cell;
+    }
+
+    return;
+  }
+
+  // ---------------------------------------------------------------------------
   // Handle key presses
   // ---------------------------------------------------------------------------
 
@@ -328,9 +406,12 @@ To set up the grid highlight the grid cells using the left mouse button and type
         case "SPACEBAR":
         case " ":
           if (!cell.isFixed()) {
-            var id = '' + sudoku.selection;
-            id = "c"+"00".substring(id.length) + id;
-            document.getElementById(id).innerHTML = '';
+            if (cell.isFinalised()) {
+              cell.unfinaliseCell();
+            } else if (cell.count() == 1) {
+              cell.finaliseCell();
+            }
+            drawCell(cell);
           }
           break;
 
@@ -345,26 +426,21 @@ To set up the grid highlight the grid cells using the left mouse button and type
         case "9":
           if (!cell.isFixed()) {
             var bit = parseInt(event.key)-1;
-            if (cell.isBitSet(bit)) {
-              if (cell.count() == 1 && !cell.isFinalised()) {
-                // Change from bit display to finalised number display
-                cell.finaliseCell();
-
-                var id = '' + sudoku.selection;
-                id = "c"+"00".substring(id.length) + id;
-                document.getElementById(id).innerHTML = event.key;
-              } else {
-                // Unset bit
-                cell.unfinaliseCell();
-                cell.unsetBit(bit);
-              }
+            if (cell.count() == 0) {
+              cell.setBit(bit);
+              cell.finaliseCell();
+            } else if (cell.isBitSet(bit)) {
+                if (cell.isFinalised()) {
+                  cell.unfinaliseCell();
+                } else {
+                  cell.unsetBit(bit);
+                }
             } else {
-              // Set bit
               cell.unfinaliseCell();
               cell.setBit(bit);
             }
           }
-          //alert("changed cell="+cell);
+          drawCell(cell);
           break;
 
         default:
@@ -451,6 +527,73 @@ To set up the grid highlight the grid cells using the left mouse button and type
   }, true);
   // the last option dispatches the event to the listener first,
   // then dispatches event to window
+
+
+  // ---------------------------------------------------------------------------
+  // Set up handling of cell selections
+  // ---------------------------------------------------------------------------
+
+  for (var i = 0; i < 81; i++) {
+    var id = '' + i;
+    id = "c" + "00".substring(id.length) + id;
+
+    document.getElementById(id).onclick = function() {
+      var id = this.getAttribute("id");
+      //var elem = document.getElementById(id);
+      var selection = parseInt(id.substr(1));
+
+      var cell = sudoku.grid.getCellRef(selection);
+
+      //alert("prev="+sudoku.selection+" new="+selection);
+      if (sudoku.selection == -1) {
+        sudoku.selection = selection;
+        //elem.setAttribute("style", "background-color: #FFFF00;");
+      } else if (selection == sudoku.selection) {
+        sudoku.selection = -1;
+      } else {
+        //var prev_id = '' + sudoku.selection;
+        //prev_id = "c"+"00".substring(prev_id.length) + prev_id;
+        //document.getElementById(prev_id).setAttribute("style", "background-color: white;");
+        //elem.setAttribute("style", "background-color: #FFFF00;");
+
+        var prev_cell = sudoku.grid.getCellRef(sudoku.selection);
+        sudoku.selection = selection;
+        drawCell(prev_cell);
+      }
+
+      drawCell(cell);
+    }
+  }
+
+  for (var i = 1; i <= 9; i++) {
+    var id = "inp" + i;
+
+    document.getElementById(id).onclick = function() {
+      if (sudoku.selection != -1) {
+        var cell = sudoku.grid.getCellRef(sudoku.selection);
+        if (!cell.isFixed()) {
+          var id = this.getAttribute("id");
+          var bit = parseInt(id.substr(3)) - 1;
+
+          if (cell.count() == 0) {
+            cell.setBit(bit);
+            cell.finaliseCell();
+          } else if (cell.isBitSet(bit)) {
+              if (cell.isFinalised()) {
+                cell.unfinaliseCell();
+              } else {
+                cell.unsetBit(bit);
+              }
+          } else {
+            cell.unfinaliseCell();
+            cell.setBit(bit);
+          }
+
+          drawCell(cell);
+        }
+      }
+    }
+  }
 
 </script>
 

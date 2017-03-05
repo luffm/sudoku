@@ -382,32 +382,6 @@ function Sudoku() {
   this.saveGrid();
   this.paint();
 
-  for (var i = 0; i < 81; i++) {
-    var id = '' + i;
-    id = "c"+"00".substring(id.length) + id;
-
-    document.getElementById(id).onclick = function() {
-      var id = this.getAttribute("id");
-      var elem = document.getElementById(id);
-      var selection = parseInt(id.substr(1));
-
-      //alert("prev="+sudoku.selection+" new="+selection);
-      if (sudoku.selection == -1) {
-        sudoku.selection = selection;
-        elem.setAttribute("style", "background-color: #FFFF00;");
-      } else if (selection == sudoku.selection) {
-        elem.setAttribute("style", "background-color: white;");
-        sudoku.selection = -1;
-      } else {
-        var prev_id = '' + sudoku.selection;
-        prev_id = "c"+"00".substring(prev_id.length) + prev_id;
-        document.getElementById(prev_id).setAttribute("style", "background-color: white;");
-
-        elem.setAttribute("style", "background-color: #FFFF00;");
-        sudoku.selection = selection;
-      }
-    }
-  }
 
 
 } // End of Sudoku object
