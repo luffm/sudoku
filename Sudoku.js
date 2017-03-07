@@ -22,9 +22,6 @@ function Sudoku() {
 
 
 
-
-
-
   this.digitCount = function(s) { // (String)->int
     var count = 0;
     for (var i = 0; i < s.length; i++) {
