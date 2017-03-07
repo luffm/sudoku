@@ -192,18 +192,17 @@ function Cell(s = '') { // String
 
   this.processBit = function(bit) { // (int)->void
     if (!this.isFixed()) {
-      if (this.count() == 0) {
+      if (!this.isBitSet(bit)) {
+        // Bit not set
         this.setBit(bit);
-        this.finaliseCell();
-      } else if (this.isBitSet(bit)) {
-          if (this.isFinalised()) {
-            this.unfinaliseCell();
-          } else {
-            this.unsetBit(bit);
-          }
-      } else {
+      } else if (this.isFinalised()) {
+        // Bit already set, and finalised
+        this.unsetBit(bit);
         this.unfinaliseCell();
-        this.setBit(bit);
+      } else if (this.count() == 1) {
+        this.finaliseCell();
+      } else {
+        this.unsetBit(bit);
       }
     }
   }
