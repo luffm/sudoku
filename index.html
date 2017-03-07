@@ -329,7 +329,8 @@
 
 </tr></table>
 
-
+<p id="validity"></p>
+<p id="solved"></p>
 
 
 
@@ -389,6 +390,43 @@
       var cell = sudoku.grid.getCellRef(sudoku.selection);
 
       switch (event.key.toUpperCase()) {
+
+        case "ARROWUP":
+          if (sudoku.selection > 8) {
+            sudoku.selection -= 9;
+          } else {
+            sudoku.selection += 72;
+          }
+          sudoku.drawCell(sudoku.grid.getCellRef(sudoku.selection));
+          break;
+
+        case "ARROWDOWN":
+          if (sudoku.selection < 72) {
+            sudoku.selection += 9;
+          } else {
+            sudoku.selection -= 72;
+          }
+          sudoku.drawCell(sudoku.grid.getCellRef(sudoku.selection));
+          break;
+
+        case "ARROWLEFT":
+          if (sudoku.selection % 9 != 0) {
+            sudoku.selection += -1;
+          } else {
+            sudoku.selection += 8;
+          }
+          sudoku.drawCell(sudoku.grid.getCellRef(sudoku.selection));
+          break;
+
+        case "ARROWRIGHT":
+          if (sudoku.selection % 9 != 8) {
+            sudoku.selection++;
+          } else {
+            sudoku.selection -= 8;
+          }
+          sudoku.drawCell(sudoku.grid.getCellRef(sudoku.selection));
+          break;
+
         case "SPACEBAR":
         case " ":
           if (!cell.isFixed()) {
@@ -397,7 +435,6 @@
             } else if (cell.count() == 1) {
               cell.finaliseCell();
             }
-            sudoku.drawCell(cell);
           }
           break;
 
@@ -411,12 +448,16 @@
         case "8":
         case "9":
           cell.processBit(parseInt(event.key)-1);
-          sudoku.drawCell(cell);
           break;
 
         default:
           break;
       }
+
+      sudoku.drawCell(cell);
+      sudoku.reportValidity();
+      sudoku.reportSolvedGrid();
+
     } else {
       // DEAL WITH NON-SELECTION CASES
 
@@ -479,6 +520,8 @@
         var cell = sudoku.grid.getCellRef(sudoku.selection);
         cell.processBit(bit);
         sudoku.drawCell(cell);
+        sudoku.reportValidity();
+        sudoku.reportSolvedGrid();
       }
     }
   }
@@ -490,6 +533,8 @@
         cell.setAllBits();
         cell.unfinaliseCell();
         sudoku.drawCell(cell);
+        sudoku.reportValidity();
+        sudoku.reportSolvedGrid();
       }
     }
   }
@@ -501,6 +546,8 @@
         cell.unsetAllBits();
         cell.unfinaliseCell();
         sudoku.drawCell(cell);
+        sudoku.reportValidity();
+        sudoku.reportSolvedGrid();
       }
     }
   }
@@ -523,7 +570,7 @@
       sudoku.steps = [];
     } while (level != sudoku.newLevel);
 
-    sudoku.valid = sudoku.grid.isValid();
+    //sudoku.valid = sudoku.grid.isValid();
     sudoku.saveGrid();
     position_element.innerHTML = (sudoku.historyIndex + 1) + "/" + sudoku.history.length;
     sudoku.creating = false;

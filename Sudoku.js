@@ -7,7 +7,7 @@ function Sudoku() {
   this.selection = -1;    // int
   this.history = [];      // History[]
   this.historyIndex = -1; // int
-  this.valid = true;      // boolean
+  //this.valid = true;      // boolean
   this.level = -1;        // int
   this.newLevel = 1;      // int
 
@@ -64,8 +64,6 @@ function Sudoku() {
       elem.setAttribute("style", "background-color: white;");
     }
 
-    //if (cell.count() == 1 && !cell.isFinalised()) {
-
     if (cell.count() == 0) {
       elem.innerHTML = '';
     } else if (cell.count() == 1 && cell.isFinalised()) {
@@ -84,9 +82,31 @@ function Sudoku() {
       }
       bit_html += "</table>";
       elem.innerHTML = bit_html;
-      //alert(bit_html);
     }
+  }
 
+  // ---------------------------------------------------------------------------
+  // Report validity of grid
+  // ---------------------------------------------------------------------------
+
+  this.reportValidity = function() { // (void)->void
+    if (this.grid.isValid()) {
+      document.getElementById("validity").innerHTML = 'OK';
+    } else {
+      document.getElementById("validity").innerHTML = "INVALID";
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Report solved grid
+  // ---------------------------------------------------------------------------
+
+  this.reportSolvedGrid = function() { // (void)->void
+    if (this.grid.isSolved()) {
+      document.getElementById("solved").innerHTML = 'Solved!';
+    } else {
+      document.getElementById("solved").innerHTML = '' + this.grid.solvedCellCount();
+    }
   }
 
   // ---------------------------------------------------------------------------
@@ -98,6 +118,9 @@ function Sudoku() {
       var cell = this.grid.getCellRef(i); // Cell
       this.drawCell(cell);
     }
+
+    this.reportValidity();
+    this.reportSolvedGrid();
   }
 
   //----------------------------------------------------------------------------
@@ -142,7 +165,7 @@ function Sudoku() {
             //alert(action);
             action.execute(this.grid);
           }
-          this.valid = this.grid.isValid();
+          //this.valid = this.grid.isValid();
           this.steps.shift();
           //this.stepping = false;
         //} else if (this.quit) {
@@ -362,7 +385,7 @@ function Sudoku() {
       if (h.finalisations[i]) this.grid.getCellRef(i).finaliseCell();
     }
     this.level = h.level;
-    this.valid = this.grid.isValid();
+    //this.valid = this.grid.isValid();
   }
 
   //----------------------------------------------------------------------------
@@ -402,7 +425,7 @@ function Sudoku() {
 
   this.grid.finalise();
   this.grid.fix();
-  this.valid = this.grid.isValid();
+  //this.valid = this.grid.isValid();
   this.makeBlanks();
   this.saveGrid();
   this.paint();

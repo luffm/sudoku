@@ -898,13 +898,12 @@ function Grid(s) {
 
   this.isValid = function() { // (void)->boolean
     // Check if each of the rows, columns and boxes hold all nine values
-    for (var type in this.types) { // char
+    for (var type = 0; type < 3; type++) { // char
       for (var i = 0; i < 9; i++) {
         var cell = this.firstCellInGroup(type, i); // Cell
 
         var group   = "........."; // String
         var singles = "........."; // String
-
 
         for (var j = 0; j < 9; j++) {
           for (var bit = 0; bit < 9; bit++) {
@@ -934,6 +933,7 @@ function Grid(s) {
   //----------------------------------------------------------------------------
 
   this.isSolved = function() { // (void)->boolean
+    //return (this.isValid() && this.remaining() == 0 && this.solvedCellCount() == 81);
     return (this.isValid() && this.remaining() == 0);
   }
 
@@ -991,8 +991,9 @@ function Grid(s) {
     for (var i = 0; i < 81; i++) {
       var count = this.table[i].count();
       if (count == 0) {
-        alert("Grid.remaining(): Unexpected operation on Cell with no bits set");
-        break;
+        n += 8;
+        //alert("Grid.remaining(): Unexpected operation on Cell with no bits set");
+        //break;
       } else {
         n += count - 1;
       }
@@ -1000,7 +1001,17 @@ function Grid(s) {
     return n;
   }
 
-
+  this.solvedCellCount = function() { // (void)->int
+    var n = 0; // int
+    for (var i = 0; i < 81; i++) {
+      var cell = this.table[i];
+      if (cell.count() == 1 && cell.isFinalised()) {
+        //alert(i);
+        n++;
+      }
+    }
+    return n;
+  }
 
 
 
