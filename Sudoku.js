@@ -7,7 +7,6 @@ function Sudoku() {
   this.selection = -1;    // int
   this.history = [];      // History[]
   this.historyIndex = -1; // int
-  //this.valid = true;      // boolean
   this.level = -1;        // int
   this.newLevel = 1;      // int
 
@@ -196,6 +195,7 @@ function Sudoku() {
 
   this.solveAll = function() { // returns an int
     this.addSteps(this.grid.nakedPatterns(1));
+    if (this.grid.remaining() == 0) return 0;
 
     var level = 0;      // int
     var remaining = -1; // int
@@ -236,41 +236,39 @@ function Sudoku() {
 
       if (count > 0) continue;
 
-/*
-        count = 0;
-        found = true;
-        while (found) {
-          remaining = grid.remaining();
-          addSteps(grid.hiddenPatterns(3));
-          addSteps(grid.nakedPatterns(3));
-          addSteps(grid.xFishes(2));
-          addSteps(grid.xyWings());
-          if (grid.remaining() != remaining) {
-            count++;
-            if (level < 3) level = 3;
-          } else {
-            found = false;
-          }
+      count = 0;
+      found = true;
+      while (found) {
+        remaining = this.grid.remaining();
+        this.addSteps(this.grid.hiddenPatterns(3));
+        this.addSteps(this.grid.nakedPatterns(3));
+        //this.addSteps(this.grid.xFishes(2));
+        //this.addSteps(this.grid.xyWings());
+        if (this.grid.remaining() != remaining) {
+          count++;
+          if (level < 3) level = 3;
+        } else {
+          found = false;
         }
+      }
 
-        if (count > 0) continue;
+      if (count > 0) continue;
 
-        count = 0;
-        found = true;
-        while (found) {
-          remaining = grid.remaining();
-          addSteps(grid.hiddenPatterns(4));
-          addSteps(grid.nakedPatterns(4));
-          addSteps(grid.xFishes(3));
-          addSteps(grid.xFishes(4));
-          if (grid.remaining() != remaining) {
-            count++;
-            if (level < 4) level = 4;
-          } else {
-            found = false;
-          }
+      count = 0;
+      found = true;
+      while (found) {
+        remaining = this.grid.remaining();
+        this.addSteps(this.grid.hiddenPatterns(4));
+        this.addSteps(this.grid.nakedPatterns(4));
+        //this.addSteps(this.grid.xFishes(3));
+        //this.addSteps(this.grid.xFishes(4));
+        if (this.grid.remaining() != remaining) {
+          count++;
+          if (level < 4) level = 4;
+        } else {
+          found = false;
         }
-*/
+      }
 
       if (count == 0) loop = false;
     }
@@ -296,8 +294,6 @@ function Sudoku() {
     var hist = new Array(81); // boolean
     for (var i = 0; i < 81; i++) hist[i] = false;
 
-//alert(this.grid);
-
     while(!complete) {
       //this.saveGrid();
       var backup = new History(this.grid, -1);
@@ -307,21 +303,24 @@ function Sudoku() {
       do {
         rand = this.grid.random(81);
         cell = this.grid.getCellRef(rand);
-      } while (hist[rand] || cell.count() != 1);
+      } while (hist[rand]);                      // || cell.count() != 1
       hist[rand] = true;
       //alert("Rand=" + rand + " Cell=" + cell);
+if (cell.count() != 1) alert("Why? " + cell);
 
       cell.setAllBits();
       //alert("Bits set, Cell=" + cell);
 
       var count = 0;
       for (var i = 0; i < 81; i++) {
-        if (hist[i] || this.grid.getCellRef(i).count() != 1) count++;
+        if (hist[i]) count++;                    //  || this.grid.getCellRef(i).count() != 1
+if (!hist[i] && this.grid.getCellRef(i).count() != 1) alert("Why? getCellRef(i)=" + this.grid.getCellRef(i));
       }
       //alert("Count=" + count);
 
       var level = this.solveAll(); // int
       var solved = this.grid.isSolved(); // boolean
+      //alert("Sudoku.newPuzzle():level=" + level + ", grid=" + this.grid + " solved=" + solved);
 
       if (count == 81) {
         // Complete!
