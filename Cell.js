@@ -194,7 +194,7 @@ function Cell(s = '') { // String
     if (!this.isFixed()) {
       if (!this.isBitSet(bit)) {
         // Bit not set
-        this.setBit(bit); alert(this.finalised);
+        this.setBit(bit);
         this.unfinaliseCell();
       } else if (this.isFinalised()) {
         // Bit already set, and finalised

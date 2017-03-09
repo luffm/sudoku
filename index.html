@@ -552,7 +552,11 @@
   }
 
   document.getElementById("inpN").onclick = function() {
-    alert("Not yet implemented");
+    if (sudoku.selection == -1) {
+      //alert("Not yet implemented");
+      sudoku.grid.initialise();
+      sudoku.paint();
+    }
   }
 
   // ---------------------------------------------------------------------------
@@ -567,6 +571,7 @@
     do {
       level = sudoku.newPuzzle();
       sudoku.steps = [];
+    //} while (sudoku.grid.solvedCellCount() > 22 );
     } while (level != sudoku.newLevel);
 
     //sudoku.valid = sudoku.grid.isValid();
