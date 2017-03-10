@@ -613,30 +613,29 @@ function Grid(s) {
   //----------------------------------------------------------------------------
   // X-FISH
   //----------------------------------------------------------------------------
-/*
-  public void xFish(int x, int index, ArrayList<Step> steps) {
-    Cell cell = table[index];
+
+  this.xFish = function(x, index, steps) { // (int, int, Step[])->void
+    var cell = this.table[index]; // Cell
     if (cell.count() == 1) return;
     if (x < 2 || x > 4) return;
 
     // For rows and columns...
-    for (char type : types) {
-      if (type == 'B') continue; // Only relevant by rows and columns
+    for (var type = 0; type < 2; type++) {
 
       // Loop for each candidate bit
-      for (int bit = 0; bit < 9; bit++) {
+      for (var bit = 0; bit < 9; bit++) {
         if (!cell.isBitSet(bit)) continue;
 
         // Create list of boolean arrays; one boolean array for every group (of
         // the current type) where candidate bit is set in more than one but no
         // more than x cells
-        ArrayList<boolean[]> arr = new ArrayList<boolean[]>();
-        ArrayList<Integer> indexes = new ArrayList<Integer>(); // Index list corresponding to boolean arrays
-        for (int i = 0; i < 9; i++) {
-          Cell currCell = firstCellInGroup(type, i);
-          boolean[] group = new boolean[] {false, false, false, false, false, false, false, false, false};
-          int count = 0;
-          for (int j = 0; j < 9; j++) {
+        var arr = []; // boolean[][]
+        var indexes = []; // int[] - Index list corresponding to boolean arrays
+        for (var i = 0; i < 9; i++) {
+          var currCell = this.firstCellInGroup(type, i); // Cell
+          var group = [false, false, false, false, false, false, false, false, false]; // boolean[]
+          var count = 0; // int
+          for (var j = 0; j < 9; j++) {
             if (currCell.isBitSet(bit)) {
               group[j] = true;
               count++;
@@ -644,46 +643,46 @@ function Grid(s) {
             currCell = currCell.next(type);
           }
           if (count > 1 && count <= x) {
-            arr.add(group);
-            indexes.add(i);
+            arr.push(group);
+            indexes.push(i);
             //System.out.println(" Added indexes(" + (indexes.size()) + ")=" + i);
           }
         }
 
         // If less than x groups were found then go to next candidate
-        if (indexes.size() < x) continue;
+        if (indexes.length < x) continue;
 
         // Create a list of all possible x-group combinations
-        ArrayList<int[]> combos = new ArrayList<int[]>();
-        for (int i = 0; i < indexes.size()-x+1; i++) {
+        var combos = []; // int[][]
+        for (var i = 0; i < indexes.length-x+1; i++) {
 
-          for (int j = i+1; j < indexes.size()-x+2; j++) {
+          for (var j = i+1; j < indexes.length-x+2; j++) {
             if (x == 2) {
-              int[] combo = new int[2];
-              combo[0] = i;
-              combo[1] = j;
-              combos.add(combo);
+              var combo = []; // int[]
+              combo.push(i);
+              combo.push(j);
+              combos.push(combo);
               continue;
             }
 
-            for (int k = j+1; k < indexes.size()-x+3; k++) {
+            for (var k = j+1; k < indexes.length-x+3; k++) {
               if (x == 3) {
-                int[] combo = new int[3];
-                combo[0] = i;
-                combo[1] = j;
-                combo[2] = k;
-                combos.add(combo);
+                var combo = [] // int[];
+                combo.push(i);
+                combo.push(j);
+                combo.push(k);
+                combos.push(combo);
                 continue;
               }
 
-              for (int m = k+1; m < indexes.size()-x+4; m++) {
+              for (var m = k+1; m < indexes.length-x+4; m++) {
                 if (x == 4) {
-                  int[] combo = new int[4];
-                  combo[0] = i;
-                  combo[1] = j;
-                  combo[2] = k;
-                  combo[3] = m;
-                  combos.add(combo);
+                  var combo = [] // int[];
+                  combo.push(i);
+                  combo.push(j);
+                  combo.push(k);
+                  combo.push(m);
+                  combos.push(combo);
                   continue;
                 }
               }
@@ -692,27 +691,27 @@ function Grid(s) {
         }
 
         // Loop for each x-group combination
-        for (int i = 0; i < combos.size(); i++) {
-          int[] combo = combos.get(i);
+        for (var i = 0; i < combos.length; i++) {
+          var combo = combos[i]; // int[]
 
           // Set up list of indexes of the x-group combination boolean arrays
           // where the candidate bit occurs (cumulative over the x-group
           // combinations)
-          ArrayList<Integer> indexes2 = new ArrayList<Integer>();
-          for (int j = 0; j < 9; j++) {
-            for (int k = 0; k < x; k++) {
-              if (arr.get(combo[k])[j]) {
-                indexes2.add(j);
+          var indexes2 = []; // int[]
+          for (var j = 0; j < 9; j++) {
+            for (var k = 0; k < x; k++) {
+              if (arr[combo[k]][j]) {
+                indexes2.push(j);
                 break;
               }
             }
           }
           //System.out.println("\t\tCount(" + (i+1) + "):"+indexes2.size());
 
-          if (indexes2.size() == x) {
+          if (indexes2.length == x) {
             // Candidate bit occurs in x indexes of the x-group combinations,
             // so this is a valid x-fish pattern
-            ArrayList<Action> actions = new ArrayList<Action>();
+            var actions = []; // Action[]
 
             //System.out.println("Combination ===>");
             //for (int ii = 0; ii < combo.length; ii++) {
@@ -723,50 +722,47 @@ function Grid(s) {
             //  System.out.println();
             //}
 
-            boolean found = false;
-            //for (int j = 0; j < indexes2.size(); j++) {
-            for (int j : indexes2) {
-              for (int k = 0; k < 9; k++) {
-                boolean invalid = false;
-                for (int m = 0; m < x; m++) {
-                  if (indexes.get(combo[m]) == k) invalid = true;
+            var found = false; // boolean
+            for (var jj = 0; jj < indexes2.length; jj++) {
+              var j = indexes2[jj];
+              for (var k = 0; k < 9; k++) {
+                var invalid = false; // boolean
+                for (var m = 0; m < x; m++) {
+                  if (indexes[combo[m]] == k) invalid = true;
                 }
                 if (invalid) continue;
-                Cell iCell;
+                var iCell = new Cell(); // Cell
                 //int row, col;
-                if (type == 'R') {
-                  //row = k;
-                  //col = indexes2.get(j);
-                  iCell = table[k*9 + j];
+                if (type == R) {
+                  iCell = this.table[k*9 + j];
                 } else {
-                  //row = indexes2.get(j);
-                  //col = k;
-                  iCell = table[j*9 + k];
+                  iCell = this.table[j*9 + k];
                 }
                 if (iCell.isBitSet(bit)) {
                   found = true;
                   iCell.unsetBit(bit);
-                  actions.add(new Action(iCell.getGridIndex(), Action.UNSETBIT, bit));
+                  actions.push(new Action(iCell.getGridIndex(), UNSETBIT, bit));
                 }
               }
             }
 
             if (found) {
-              ArrayList<Integer> cells = new ArrayList<Integer>();
-              for (int j = 0; j < combo.length; j++) {
-                for (int k : indexes2) {
-                  if (type == 'R') {
-                    cells.add(indexes.get(combo[j])*9 + k);
+              var cells = []; // int[]
+              for (var j = 0; j < combo.length; j++) {
+                for (var kk = 0; kk < indexes2.length; kk++) {
+                  var k = indexes2[kk];
+                  if (type == R) {
+                    cells.push(indexes[combo[j]]*9 + k);
                   } else {
-                    cells.add(k*9 + indexes.get(combo[j]));
+                    cells.push(k*9 + indexes[combo[j]]);
                   }
                 }
               }
 
-              ArrayList<Integer> bits = new ArrayList<Integer>();
-              bits.add(bit);
+              var bits = []; // int[]
+              bits.push(bit);
 
-              steps.add(new Step(x+"-Fish", cells, bits, actions, type));
+              steps.push(new Step(x+"-Fish", cells, bits, actions, type));
               //System.out.println("(r" + (cell.getRowIndex()+1) + ",c" + (cell.getColIndex()+1) + "): " +
               //                   x + "-Fish " + (bit+1) + " in " + cell + " [" + type + "]");
             }
@@ -777,35 +773,34 @@ function Grid(s) {
     } // End of type loop
   }
 
-  public ArrayList<Step> xFishes(int x) {
-    ArrayList<Step> steps = new ArrayList<Step>();
+  this.xFishes = function(x) { // (int)->Step[]
+    var steps = []; // Step[]
 
-    for (int i = 0; i < 81; i++) {
-      xFish(x, i, steps);
+    for (var i = 0; i < 81; i++) {
+      this.xFish(x, i, steps);
     }
 
     return steps;
   }
-*/
+
 
   //----------------------------------------------------------------------------
   // XY-WING
   //----------------------------------------------------------------------------
 
-/*
-  public void xyWing(int index, ArrayList<Step> steps) {
-    Cell cell = table[index];
+  this.xyWing = function(index, steps) { // (int, Step[])->void
+    var cell = this.table[index]; // Cell
     if (cell.count() != 2) return;
 
-    int b1 = cell.getSetBit(1);
-    int b2 = cell.getSetBit(2);
+    var b1 = cell.getSetBit(1); // int
+    var b2 = cell.getSetBit(2); // int
 
-    XYCells xyCells = new XYCells();
+    var xyCells = new XYCells(); // XYCells
 
     // For row group, column group and box group...
-    for (char type : types) {
-      Cell currCell = firstCellInGroup(type, cell.getIndex(type));
-      for (int j = 0; j < 9; j++) {
+    for (var type = 0; type < 3; type++) {
+      var currCell = this.firstCellInGroup(type, cell.getIndex(type)); // Cell
+      for (var j = 0; j < 9; j++) {
         if (currCell.getGridIndex() != index && currCell.count() == 2 &&
             (currCell.isBitSet(b1) ^ currCell.isBitSet(b2))) {
           if (currCell.isBitSet(b1)) {
@@ -819,18 +814,20 @@ function Grid(s) {
     }
 
     //System.out.println(xyCells.toString());
-    for (char b1Type : types) {
-      for (Cell b1Cell : xyCells.getCells(true, b1Type)) {
+    for (var b1Type = 0; b1Type < 3; b1Type++) {
+      for (var ci = 0; ci < xyCells.getCells(true, b1Type).length; ci++) {
+        var b1Cell = xyCells.getCells(true, b1Type)[ci]; // Cell
 
-        for (char b2Type : types) {
+        for (var b2Type = 0; b2Type < 3; b2Type++) {
           if (b1Type == b2Type) continue;
-          for (Cell b2Cell : xyCells.getCells(false, b2Type)) {
+          for (var cj = 0; cj < xyCells.getCells(false, b2Type).length; cj++) {
+            var b2Cell = xyCells.getCells(false, b2Type)[cj]; // Cell
             if (b1Cell.getRowIndex() == b2Cell.getRowIndex() ||
                 b1Cell.getColIndex() == b2Cell.getColIndex() ||
                 b1Cell.getBoxIndex() == b2Cell.getBoxIndex()) continue;
             //System.out.println("b1="+b1Cell.toString());
             //System.out.println(" b2="+b2Cell.toString());
-            int bit;
+            var bit; // int
             if (b2Cell.isBitSet(b1Cell.getSetBit(1))) {
               bit = b1Cell.getSetBit(1);
             } else if (b2Cell.isBitSet(b1Cell.getSetBit(2))) {
@@ -841,33 +838,33 @@ function Grid(s) {
             }
             //System.out.println("  bit="+bit);
 
-            ArrayList<Action> actions = new ArrayList<Action>();
-            boolean found = false;
-            for (int i = 0; i < 81; i++) {
-              if ((b1Cell.getRowIndex() == table[i].getRowIndex() ||
-                   b1Cell.getColIndex() == table[i].getColIndex() ||
-                   b1Cell.getBoxIndex() == table[i].getBoxIndex()) &&
-                  (b2Cell.getRowIndex() == table[i].getRowIndex() ||
-                   b2Cell.getColIndex() == table[i].getColIndex() ||
-                   b2Cell.getBoxIndex() == table[i].getBoxIndex()) &&
-                  table[i].isBitSet(bit)) {
+            var actions = []; // Action[]
+            var found = false; // boolean
+            for (var i = 0; i < 81; i++) {
+              if ((b1Cell.getRowIndex() == this.table[i].getRowIndex() ||
+                   b1Cell.getColIndex() == this.table[i].getColIndex() ||
+                   b1Cell.getBoxIndex() == this.table[i].getBoxIndex()) &&
+                  (b2Cell.getRowIndex() == this.table[i].getRowIndex() ||
+                   b2Cell.getColIndex() == this.table[i].getColIndex() ||
+                   b2Cell.getBoxIndex() == this.table[i].getBoxIndex()) &&
+                  this.table[i].isBitSet(bit)) {
                 found = true;
                 //System.out.println("  found="+table[i].toString());
-                table[i].unsetBit(bit);
-                actions.add(new Action(i, Action.UNSETBIT, bit));
+                this.table[i].unsetBit(bit);
+                actions.push(new Action(i, UNSETBIT, bit));
               }
             }
 
             if (found) {
-              ArrayList<Integer> cells = new ArrayList<Integer>();
-              cells.add(index);
-              cells.add(b1Cell.getGridIndex());
-              cells.add(b2Cell.getGridIndex());
+              var cells = []; // int[]
+              cells.push(index);
+              cells.push(b1Cell.getGridIndex());
+              cells.push(b2Cell.getGridIndex());
 
-              ArrayList<Integer> bits = new ArrayList<Integer>();
-              bits.add(bit);
+              var bits = []; // int[]
+              bits.push(bit);
 
-              steps.add(new Step("XY-Wing", cells, bits, actions, ' '));
+              steps.push(new Step("XY-Wing", cells, bits, actions, ' '));
             }
 
           }
@@ -878,17 +875,17 @@ function Grid(s) {
 
   }
 
-  public ArrayList<Step> xyWings() {
-    ArrayList<Step> steps = new ArrayList<Step>();
+  this.xyWings = function() { // (void)->Step[]
+    var steps = [];
 
-    for (int i = 0; i < 81; i++) {
-      xyWing(i, steps);
+    for (var i = 0; i < 81; i++) {
+      this.xyWing(i, steps);
     }
 
     return steps;
   }
 
-*/
+
 
 
 

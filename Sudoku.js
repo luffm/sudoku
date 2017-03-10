@@ -29,11 +29,11 @@ function Sudoku() {
     return count;
   }
 
-  this.isSameGroup = function(x, y, type) { // (int, int, char)->boolean
+  this.isSameGroup = function(x, y, type) { // (int, int, int)->boolean
     switch (type) {
-      case 'R': return (Math.floor(x / 9) == Math.floor(y / 9));
-      case 'C': return ((x % 9) == (y % 9));
-      case 'B': return ((Math.floor(x / 27)*3 + Math.floor((x % 9)/3)) == (Math.floor(y / 27)*3 + Math.floor((y % 9)/3)));
+      case R: return (Math.floor(x / 9) == Math.floor(y / 9));
+      case C: return ((x % 9) == (y % 9));
+      case B: return ((Math.floor(x / 27)*3 + Math.floor((x % 9)/3)) == (Math.floor(y / 27)*3 + Math.floor((y % 9)/3)));
       default: return false;
     }
   }
@@ -242,8 +242,8 @@ function Sudoku() {
         remaining = this.grid.remaining();
         this.addSteps(this.grid.hiddenPatterns(3));
         this.addSteps(this.grid.nakedPatterns(3));
-        //this.addSteps(this.grid.xFishes(2));
-        //this.addSteps(this.grid.xyWings());
+        this.addSteps(this.grid.xFishes(2));
+        this.addSteps(this.grid.xyWings());
         if (this.grid.remaining() != remaining) {
           count++;
           if (level < 3) level = 3;
@@ -260,8 +260,8 @@ function Sudoku() {
         remaining = this.grid.remaining();
         this.addSteps(this.grid.hiddenPatterns(4));
         this.addSteps(this.grid.nakedPatterns(4));
-        //this.addSteps(this.grid.xFishes(3));
-        //this.addSteps(this.grid.xFishes(4));
+        this.addSteps(this.grid.xFishes(3));
+        this.addSteps(this.grid.xFishes(4));
         if (this.grid.remaining() != remaining) {
           count++;
           if (level < 4) level = 4;

@@ -83,6 +83,8 @@
 
 <body>
 
+<p>Select a cell by clicking on it. Numbers can be clicked on to the right of the grid, or alternatively type numbers on keyboard. If a cell is empty the first time a number is entered it will appear as unfinalised; to finalise the number enter it again. Cursor keys can be used to move selection to other cells.</p>
+
 <table><tr>
 
 <!-- 3box x 3box table -->
@@ -329,8 +331,8 @@
 
 </tr></table>
 
-<p id="validity"></p>
-<p id="solved"></p>
+<p>Validity: <span id="validity"></span></p>
+<p>Number of completed cells: <span id="solved"></span></p>
 
 
 
@@ -360,6 +362,7 @@
 
 <script src="Cell.js"></script>
 <script src="Action.js"></script>
+<script src="XYCells.js"></script>
 <script src="Grid.js"></script>
 <script src="Step.js"></script>
 <script src="History.js"></script>
