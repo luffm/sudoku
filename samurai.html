@@ -1,0 +1,1086 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+
+<head>
+  <title>Samurai Sudoku</title>
+  
+  <style type="text/css">
+    table.frame {
+      border-spacing: 0px;
+      border-collapse: separate;
+      border:2px solid white;
+    }
+    table.boxframe {
+      border-spacing: 0px;
+      border-collapse: separate;
+      border:1px solid black;
+    }
+    table.bitcellframe {
+      border-spacing: 0px;
+      border-collapse: separate;
+      border:0px;
+    }
+    td.box {padding:0; margin:0;}
+    td.cell {
+      padding:0;
+      margin:0;
+      border: 1px solid black;
+      width: 24px;
+      height: 26px;
+      text-align: center;
+      font-size: large;
+    }
+    td.bitcell {
+      padding:0;
+      margin:0;
+      border: 0px;
+      width: 8px;
+      height: 8px;
+      text-align: center;
+      font-size: small;
+    }
+    td.pad {
+      background-color: #AAAAAA;
+      font-size: xx-large;
+    }
+    td.pad2 {
+      background-color: #AAAAAA;
+      font-size: large;
+    }
+    td.pad3 {
+      background-color: #55FF55;
+      font-size: large;
+    }
+    td.pad4 {
+      background-color: #FF5555;
+      font-size: large;
+    }
+    td.pad5 {
+      background-color: #5555FF;
+      font-size: large;
+    }
+    td.button {
+      padding:0;
+      margin:0;
+      border: 1px solid black;
+      width: 206px;
+      height: 45px;
+      text-align: center;
+      font-size: large;
+    }
+    td.button2 {
+      width: 103px;
+    }
+  </style>
+
+  <!--  tr {background-color:green;} -->
+  <!--  td.box {border:2px solid blue;} -->
+  <!--  table.frame {border-collapse: collapse;} -->
+  <!--  table.boxframe {border:2px solid red;} -->
+
+</head>
+
+<body>
+
+
+<table><tr>
+
+<!-- 3box x 3box table -->
+<td><table class="frame">
+  <!-- First Row (A- -B) -->
+  <tr>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="a00"></td>
+          <td class="cell" id="a01"></td>
+          <td class="cell" id="a02"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="a09"></td>
+          <td class="cell" id="a10"></td>
+          <td class="cell" id="a11"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="a18"></td>
+          <td class="cell" id="a19"></td>
+          <td class="cell" id="a20"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="a03"></td>
+          <td class="cell" id="a04"></td>
+          <td class="cell" id="a05"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="a12"></td>
+          <td class="cell" id="a13"></td>
+          <td class="cell" id="a14"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="a21"></td>
+          <td class="cell" id="a22"></td>
+          <td class="cell" id="a23"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="a06"></td>
+          <td class="cell" id="a07"></td>
+          <td class="cell" id="a08"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="a15"></td>
+          <td class="cell" id="a16"></td>
+          <td class="cell" id="a17"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="a24"></td>
+          <td class="cell" id="a25"></td>
+          <td class="cell" id="a26"></td>
+        </tr>
+      </table>
+    </td>
+
+    <!-- empty -->
+    <td class="box"></td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="b00"></td>
+          <td class="cell" id="b01"></td>
+          <td class="cell" id="b02"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="b09"></td>
+          <td class="cell" id="b10"></td>
+          <td class="cell" id="b11"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="b18"></td>
+          <td class="cell" id="b19"></td>
+          <td class="cell" id="b20"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="b03"></td>
+          <td class="cell" id="b04"></td>
+          <td class="cell" id="b05"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="b12"></td>
+          <td class="cell" id="b13"></td>
+          <td class="cell" id="b14"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="b21"></td>
+          <td class="cell" id="b22"></td>
+          <td class="cell" id="b23"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="b06"></td>
+          <td class="cell" id="b07"></td>
+          <td class="cell" id="b08"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="b15"></td>
+          <td class="cell" id="b16"></td>
+          <td class="cell" id="b17"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="b24"></td>
+          <td class="cell" id="b25"></td>
+          <td class="cell" id="b26"></td>
+        </tr>
+      </table>
+    </td>
+
+  </tr>
+
+
+  <!-- Second Row (A- -B) -->
+  <tr>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="a27"></td>
+          <td class="cell" id="a28"></td>
+          <td class="cell" id="a29"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="a36"></td>
+          <td class="cell" id="a37"></td>
+          <td class="cell" id="a38"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="a45"></td>
+          <td class="cell" id="a46"></td>
+          <td class="cell" id="a47"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="a30"></td>
+          <td class="cell" id="a31"></td>
+          <td class="cell" id="a32"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="a39"></td>
+          <td class="cell" id="a40"></td>
+          <td class="cell" id="a41"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="a48"></td>
+          <td class="cell" id="a49"></td>
+          <td class="cell" id="a50"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="a33"></td>
+          <td class="cell" id="a34"></td>
+          <td class="cell" id="a35"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="a42"></td>
+          <td class="cell" id="a43"></td>
+          <td class="cell" id="a44"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="a51"></td>
+          <td class="cell" id="a52"></td>
+          <td class="cell" id="a53"></td>
+        </tr>
+      </table>
+    </td>
+
+    <!-- empty -->
+    <td class="box"></td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="b27"></td>
+          <td class="cell" id="b28"></td>
+          <td class="cell" id="b29"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="b36"></td>
+          <td class="cell" id="b37"></td>
+          <td class="cell" id="b38"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="b45"></td>
+          <td class="cell" id="b46"></td>
+          <td class="cell" id="b47"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="b30"></td>
+          <td class="cell" id="b31"></td>
+          <td class="cell" id="b32"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="b39"></td>
+          <td class="cell" id="b40"></td>
+          <td class="cell" id="b41"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="b48"></td>
+          <td class="cell" id="b49"></td>
+          <td class="cell" id="b50"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="b33"></td>
+          <td class="cell" id="b34"></td>
+          <td class="cell" id="b35"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="b42"></td>
+          <td class="cell" id="b43"></td>
+          <td class="cell" id="b44"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="b51"></td>
+          <td class="cell" id="b52"></td>
+          <td class="cell" id="b53"></td>
+        </tr>
+      </table>
+    </td>
+
+  </tr>
+
+
+  <!-- Third Row (A-C-B) -->
+  <tr>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="a54"></td>
+          <td class="cell" id="a55"></td>
+          <td class="cell" id="a56"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="a63"></td>
+          <td class="cell" id="a64"></td>
+          <td class="cell" id="a65"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="a72"></td>
+          <td class="cell" id="a73"></td>
+          <td class="cell" id="a74"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="a57"></td>
+          <td class="cell" id="a58"></td>
+          <td class="cell" id="a59"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="a66"></td>
+          <td class="cell" id="a67"></td>
+          <td class="cell" id="a68"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="a75"></td>
+          <td class="cell" id="a76"></td>
+          <td class="cell" id="a77"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="a60"></td>
+          <td class="cell" id="a61"></td>
+          <td class="cell" id="a62"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="a69"></td>
+          <td class="cell" id="a70"></td>
+          <td class="cell" id="a71"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="a78"></td>
+          <td class="cell" id="a79"></td>
+          <td class="cell" id="a80"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="c03"></td>
+          <td class="cell" id="c04"></td>
+          <td class="cell" id="c05"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="c12"></td>
+          <td class="cell" id="c13"></td>
+          <td class="cell" id="c14"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="c21"></td>
+          <td class="cell" id="c22"></td>
+          <td class="cell" id="c23"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="b54"></td>
+          <td class="cell" id="b55"></td>
+          <td class="cell" id="b56"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="b63"></td>
+          <td class="cell" id="b64"></td>
+          <td class="cell" id="b65"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="b72"></td>
+          <td class="cell" id="b73"></td>
+          <td class="cell" id="b74"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="b57"></td>
+          <td class="cell" id="b58"></td>
+          <td class="cell" id="b59"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="b66"></td>
+          <td class="cell" id="b67"></td>
+          <td class="cell" id="b68"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="b75"></td>
+          <td class="cell" id="b76"></td>
+          <td class="cell" id="b77"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="b60"></td>
+          <td class="cell" id="b61"></td>
+          <td class="cell" id="b62"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="b69"></td>
+          <td class="cell" id="b70"></td>
+          <td class="cell" id="b71"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="b78"></td>
+          <td class="cell" id="b79"></td>
+          <td class="cell" id="b80"></td>
+        </tr>
+      </table>
+    </td>
+
+  </tr>
+
+  <!-- Fourth Row ( -C- ) -->
+  <tr>
+
+    <!-- empty -->
+    <td class="box"></td>
+
+    <!-- empty -->
+    <td class="box"></td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="c27"></td>
+          <td class="cell" id="c28"></td>
+          <td class="cell" id="c29"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="c36"></td>
+          <td class="cell" id="c37"></td>
+          <td class="cell" id="c38"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="c45"></td>
+          <td class="cell" id="c46"></td>
+          <td class="cell" id="c47"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="c30"></td>
+          <td class="cell" id="c31"></td>
+          <td class="cell" id="c32"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="c39"></td>
+          <td class="cell" id="c40"></td>
+          <td class="cell" id="c41"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="c48"></td>
+          <td class="cell" id="c49"></td>
+          <td class="cell" id="c50"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="c33"></td>
+          <td class="cell" id="c34"></td>
+          <td class="cell" id="c35"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="c42"></td>
+          <td class="cell" id="c43"></td>
+          <td class="cell" id="c44"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="c51"></td>
+          <td class="cell" id="c52"></td>
+          <td class="cell" id="c53"></td>
+        </tr>
+      </table>
+    </td>
+
+    <!-- empty -->
+    <td class="box"></td>
+
+    <!-- empty -->
+    <td class="box"></td>
+
+  </tr>
+
+
+  <!-- Fifth Row (D-C-E) -->
+  <tr>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="d00"></td>
+          <td class="cell" id="d01"></td>
+          <td class="cell" id="d02"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="d09"></td>
+          <td class="cell" id="d10"></td>
+          <td class="cell" id="d11"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="d18"></td>
+          <td class="cell" id="d19"></td>
+          <td class="cell" id="d20"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="d03"></td>
+          <td class="cell" id="d04"></td>
+          <td class="cell" id="d05"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="d12"></td>
+          <td class="cell" id="d13"></td>
+          <td class="cell" id="d14"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="d21"></td>
+          <td class="cell" id="d22"></td>
+          <td class="cell" id="d23"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="d06"></td>
+          <td class="cell" id="d07"></td>
+          <td class="cell" id="d08"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="d15"></td>
+          <td class="cell" id="d16"></td>
+          <td class="cell" id="d17"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="d24"></td>
+          <td class="cell" id="d25"></td>
+          <td class="cell" id="d26"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="c57"></td>
+          <td class="cell" id="c58"></td>
+          <td class="cell" id="c59"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="c66"></td>
+          <td class="cell" id="c67"></td>
+          <td class="cell" id="c68"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="c75"></td>
+          <td class="cell" id="c76"></td>
+          <td class="cell" id="c77"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="e00"></td>
+          <td class="cell" id="e01"></td>
+          <td class="cell" id="e02"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="e09"></td>
+          <td class="cell" id="e10"></td>
+          <td class="cell" id="e11"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="e18"></td>
+          <td class="cell" id="e19"></td>
+          <td class="cell" id="e20"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="e03"></td>
+          <td class="cell" id="e04"></td>
+          <td class="cell" id="e05"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="e12"></td>
+          <td class="cell" id="e13"></td>
+          <td class="cell" id="e14"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="e21"></td>
+          <td class="cell" id="e22"></td>
+          <td class="cell" id="e23"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="e06"></td>
+          <td class="cell" id="e07"></td>
+          <td class="cell" id="e08"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="e15"></td>
+          <td class="cell" id="e16"></td>
+          <td class="cell" id="e17"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="e24"></td>
+          <td class="cell" id="e25"></td>
+          <td class="cell" id="e26"></td>
+        </tr>
+      </table>
+    </td>
+
+  </tr>
+
+
+  <!-- Sixth Row (D- -E) -->
+  <tr>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="d27"></td>
+          <td class="cell" id="d28"></td>
+          <td class="cell" id="d29"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="d36"></td>
+          <td class="cell" id="d37"></td>
+          <td class="cell" id="d38"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="d45"></td>
+          <td class="cell" id="d46"></td>
+          <td class="cell" id="d47"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="d30"></td>
+          <td class="cell" id="d31"></td>
+          <td class="cell" id="d32"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="d39"></td>
+          <td class="cell" id="d40"></td>
+          <td class="cell" id="d41"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="d48"></td>
+          <td class="cell" id="d49"></td>
+          <td class="cell" id="d50"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="d33"></td>
+          <td class="cell" id="d34"></td>
+          <td class="cell" id="d35"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="d42"></td>
+          <td class="cell" id="d43"></td>
+          <td class="cell" id="d44"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="d51"></td>
+          <td class="cell" id="d52"></td>
+          <td class="cell" id="d53"></td>
+        </tr>
+      </table>
+    </td>
+
+    <!-- empty -->
+    <td class="box"></td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="e27"></td>
+          <td class="cell" id="e28"></td>
+          <td class="cell" id="e29"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="e36"></td>
+          <td class="cell" id="e37"></td>
+          <td class="cell" id="e38"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="e45"></td>
+          <td class="cell" id="e46"></td>
+          <td class="cell" id="e47"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="e30"></td>
+          <td class="cell" id="e31"></td>
+          <td class="cell" id="e32"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="e39"></td>
+          <td class="cell" id="e40"></td>
+          <td class="cell" id="e41"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="e48"></td>
+          <td class="cell" id="e49"></td>
+          <td class="cell" id="e50"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="e33"></td>
+          <td class="cell" id="e34"></td>
+          <td class="cell" id="e35"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="e42"></td>
+          <td class="cell" id="e43"></td>
+          <td class="cell" id="e44"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="e51"></td>
+          <td class="cell" id="e52"></td>
+          <td class="cell" id="e53"></td>
+        </tr>
+      </table>
+    </td>
+
+  </tr>
+
+
+  <!-- Seventh Row (D- -E) -->
+  <tr>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="d54"></td>
+          <td class="cell" id="d55"></td>
+          <td class="cell" id="d56"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="d63"></td>
+          <td class="cell" id="d64"></td>
+          <td class="cell" id="d65"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="d72"></td>
+          <td class="cell" id="d73"></td>
+          <td class="cell" id="d74"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="d57"></td>
+          <td class="cell" id="d58"></td>
+          <td class="cell" id="d59"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="d66"></td>
+          <td class="cell" id="d67"></td>
+          <td class="cell" id="d68"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="d75"></td>
+          <td class="cell" id="d76"></td>
+          <td class="cell" id="d77"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="d60"></td>
+          <td class="cell" id="d61"></td>
+          <td class="cell" id="d62"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="d69"></td>
+          <td class="cell" id="d70"></td>
+          <td class="cell" id="d71"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="d78"></td>
+          <td class="cell" id="d79"></td>
+          <td class="cell" id="d80"></td>
+        </tr>
+      </table>
+    </td>
+
+    <!-- empty -->
+    <td class="box"></td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="e54"></td>
+          <td class="cell" id="e55"></td>
+          <td class="cell" id="e56"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="e63"></td>
+          <td class="cell" id="e64"></td>
+          <td class="cell" id="e65"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="e72"></td>
+          <td class="cell" id="e73"></td>
+          <td class="cell" id="e74"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="e57"></td>
+          <td class="cell" id="e58"></td>
+          <td class="cell" id="e59"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="e66"></td>
+          <td class="cell" id="e67"></td>
+          <td class="cell" id="e68"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="e75"></td>
+          <td class="cell" id="e76"></td>
+          <td class="cell" id="e77"></td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="box">
+      <!-- 3x3 within-box table -->
+      <table class="boxframe">
+        <tr>
+          <td class="cell" id="e60"></td>
+          <td class="cell" id="e61"></td>
+          <td class="cell" id="e62"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="e69"></td>
+          <td class="cell" id="e70"></td>
+          <td class="cell" id="e71"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="e78"></td>
+          <td class="cell" id="e79"></td>
+          <td class="cell" id="e80"></td>
+        </tr>
+      </table>
+    </td>
+
+  </tr>
+
+
+
+</table></td>
+
+</tr></table>
+
+
+
+
+</body>
+
+<script type="text/javascript">
+
+  // ---------------------------------------------------------------------------
+  // Set up static global variables
+  // ---------------------------------------------------------------------------
+
+  var R = 0;
+  var C = 1;
+  var B = 2;
+
+  var SETBIT       = 1;
+  var UNSETBIT     = 2;
+  var SETALLBITS   = 3;
+  var UNSETALLBITS = 4;
+
+</script>
+
+<script src="Cell.js"></script>
+<script src="Action.js"></script>
+<script src="XYCells.js"></script>
+<script src="Grid.js"></script>
+<script src="Step.js"></script>
+<script src="History.js"></script>
+<script src="Samurai.js"></script>
+
+<script type="text/javascript">
+
+  // ---------------------------------------------------------------------------
+  // Create new Sudoku object
+  // ---------------------------------------------------------------------------
+
+  var samurai = new Samurai();
+
+  //alert(samurai.grids[0]);
+  //samurai.paint();
+
+
+/*
+  if (1) {
+    sudoku.selection = -1;
+    sudoku.locked = true;
+    sudoku.creating = true;
+    var level; // int
+    do {
+      level = sudoku.newPuzzle();
+      sudoku.steps = [];
+    } while (level != sudoku.newLevel);
+
+    //sudoku.valid = sudoku.grid.isValid();
+    sudoku.saveGrid();
+    sudoku.creating = false;
+    sudoku.locked = false;
+
+    sudoku.paint();
+  }
+*/
+
+</script>
+
+</html>

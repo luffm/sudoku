@@ -559,6 +559,8 @@
       //alert("Not yet implemented");
       sudoku.grid.initialise();
       sudoku.paint();
+      sudoku.reportValidity();
+      sudoku.reportSolvedGrid();
     }
   }
 
@@ -584,6 +586,8 @@
     sudoku.locked = false;
 
     sudoku.paint();
+    sudoku.reportValidity();
+    sudoku.reportSolvedGrid();
   }
 
   // ---------------------------------------------------------------------------
@@ -631,6 +635,8 @@
 
     sudoku.locked = false;
     sudoku.paint();
+    sudoku.reportValidity();
+    sudoku.reportSolvedGrid();
   }
 
   // ---------------------------------------------------------------------------
@@ -641,6 +647,8 @@
     sudoku.selection = -1;
     sudoku.clearGrid();
     sudoku.paint();
+    sudoku.reportValidity();
+    sudoku.reportSolvedGrid();
   }
 
   // ---------------------------------------------------------------------------
@@ -662,6 +670,8 @@
       sudoku.grid.fix();
     }
     sudoku.paint();
+    sudoku.reportValidity();
+    sudoku.reportSolvedGrid();
   }
 
   // ---------------------------------------------------------------------------
@@ -675,6 +685,8 @@
     sudoku.prevGrid();
     position_element.innerHTML = (sudoku.historyIndex + 1) + "/" + sudoku.history.length;
     sudoku.paint();
+    sudoku.reportValidity();
+    sudoku.reportSolvedGrid();
   }
 
   // ---------------------------------------------------------------------------
@@ -688,6 +700,8 @@
     sudoku.nextGrid();
     position_element.innerHTML = (sudoku.historyIndex + 1) + "/" + sudoku.history.length;
     sudoku.paint();
+    sudoku.reportValidity();
+    sudoku.reportSolvedGrid();
   }
 
 

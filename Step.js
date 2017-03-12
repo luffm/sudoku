@@ -10,6 +10,7 @@ function Step(name, cells, bits, actions, type) { // String, int[], int[], Actio
   this.type    = type;    // char
 
   this.toString = function() { // returns String
-    return this.name + ' ' + this.cells + ' ' + this.type;
+    return "name="+this.name + " cells="+this.cells + " bits="+this.bits + " type="+this.type
+           + "\n actions="+this.actions + "\n\n";
   }
 }

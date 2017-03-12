@@ -2,6 +2,18 @@
 // Grid object
 // -----------------------------------------------------------------------------
 
+// 00 01 02 | 03 04 05 | 06 07 08
+// 09 10 11 | 12 13 14 | 15 16 17
+// 18 19 20 | 21 22 23 | 24 25 26
+// ---------+----------+---------
+// 27 28 29 | 30 31 32 | 33 34 35
+// 36 37 38 | 39 40 41 | 42 43 44
+// 45 46 47 | 48 49 50 | 51 52 53
+// ---------+----------+---------
+// 54 55 56 | 57 58 59 | 60 61 62
+// 63 64 65 | 66 67 68 | 69 70 71
+// 72 73 74 | 75 76 77 | 78 79 80
+
 function Grid(s) { 
   this.table = new Array(81); // Cell[]
   this.rows  = new Array(9);  // Cell[]
@@ -38,7 +50,7 @@ function Grid(s) {
     return Math.floor(Math.random() * i);
   }
 
-  this.rowValid = function(grid, row) { // returns boolean; String[], int
+  this.rowValid = function(grid, row) { // (String[], int)->boolean
     var arr = [false, false, false, false, false, false, false, false, false];
     var isValid = true; // boolean
     for (var c = 0; c < 9; c++) {
@@ -54,7 +66,7 @@ function Grid(s) {
     return isValid;
   }
 
-  this.colValid = function(grid, col) { // returns boolean; String[], int
+  this.colValid = function(grid, col) { // (String[], int)->boolean
     var arr = [false, false, false, false, false, false, false, false, false];
     var isValid = true; // boolean
     for (var r = 0; r < 9; r++) {
@@ -70,7 +82,7 @@ function Grid(s) {
     return isValid;
   }
 
-  this.boxValid = function(grid, row, col) { // returns boolean; String[], int, int
+  this.boxValid = function(grid, row, col) { // (String[], int, int)->boolean
     var arr = [false, false, false, false, false, false, false, false, false];
     var isValid = true; // boolean
     var i = Math.floor(row / 3) * 27 + Math.floor(col / 3) * 3; // int
@@ -199,6 +211,19 @@ function Grid(s) {
       var cell = this.rows[r];
       for (var c = 0; c < 9; c++) {
         s += "[" + cell.toString() + "]";
+        cell = cell.next(R);
+      }
+      s += "\n";
+    }
+    return s;
+  }
+
+  this.debug = function() { // returns a string
+    var s = '';
+    for (var r = 0; r < 9; r++) {
+      var cell = this.rows[r];
+      for (var c = 0; c < 9; c++) {
+        s += "[" + cell.debug() + "]";
         cell = cell.next(R);
       }
       s += "\n";

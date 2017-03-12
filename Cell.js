@@ -143,6 +143,16 @@ function Cell(s = '') { // String
     return s;
   }
 
+  this.debug = function() { // returns a string
+    var s = '';
+    for (var i = 0; i < 9; i++) {
+      if (this.isBitSet(i)) {
+        s += (i+1).toString();
+      }
+    }
+    return s;
+  }
+
   this.count = function() { // returns an int
     var n = 0;
     for (var i = 0; i < 9; i++) {

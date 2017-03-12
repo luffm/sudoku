@@ -18,9 +18,6 @@ function Sudoku() {
   this.creating = false;  // boolean
   this.quit = false;      // boolean
 
-
-
-
   this.digitCount = function(s) { // (String)->int
     var count = 0;
     for (var i = 0; i < s.length; i++) {
@@ -47,7 +44,7 @@ function Sudoku() {
     //alert("drawCell: index=" + index + " cell=" + cell + "sudoku.selection=" + sudoku.selection);
 
     var id = '' + index;
-    id = "c"+"00".substring(id.length) + id;
+    id = 'c' + "00".substring(id.length) + id;
 
     var elem = document.getElementById(id);
 
@@ -114,9 +111,6 @@ function Sudoku() {
       var cell = this.grid.getCellRef(i); // Cell
       this.drawCell(cell);
     }
-
-    this.reportValidity();
-    this.reportSolvedGrid();
   }
 
   //----------------------------------------------------------------------------
@@ -425,5 +419,7 @@ if (!hist[i] && this.grid.getCellRef(i).count() != 1) alert("Why? getCellRef(i)=
   this.makeBlanks();
   this.saveGrid();
   this.paint();
+  this.reportValidity();
+  this.reportSolvedGrid();
 
 } // End of Sudoku object
