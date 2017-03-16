@@ -122,44 +122,15 @@ function Samurai() {
   }
 
   //----------------------------------------------------------------------------
-  // CARRY OUT STEPS
-  //----------------------------------------------------------------------------
-/*
-  this.doSteps = function() {
-    if (this.steps.length > 0) {
-      // Restore backup
-      this.grid = new Grid(this.backup.numbers);
-      for (var i = 0; i < 81; i++) {
-        if (this.backup.fixes[i]) this.grid.getCellRef(i).fixCell();
-        if (this.backup.finalisations[i]) this.grid.getCellRef(i).finaliseCell();
-      }
-
-      this.grid.initialise();
-
-      while (this.steps.length > 0) {
-          for (var act_i = 0; act_i < this.steps[0].actions.length; act_i++) {
-            var action = this.steps[0].actions[act_i];
-            action.execute(this.grid);
-          }
-          this.steps.shift();
-      }
-
-      this.saveGrid();
-    }
-  }
-*/
-
-  //----------------------------------------------------------------------------
   // CARRY OUT STEPS IN DUPLICATE CELLS
   //----------------------------------------------------------------------------
 
   this.duplicateSteps = function(steps, g) { // (Step[], int)->void
-    if (steps.length > 0) {
 
-      while (steps.length > 0) {
-        for (var act_i = 0; act_i < steps[0].actions.length; act_i++) {
-          var action = steps[0].actions[act_i];
-          var g2 = -1; // int
+    while (steps.length > 0) {
+      for (var act_i = 0; act_i < steps[0].actions.length; act_i++) {
+        var action = steps[0].actions[act_i];
+        var g2 = -1; // int
 
 // 00 01 02 | 03 04 05 | 06 07 08
 // 09 10 11 | 12 13 14 | 15 16 17
@@ -173,72 +144,111 @@ function Samurai() {
 // 63 64 65 | 66 67 68 | 69 70 71
 // 72 73 74 | 75 76 77 | 78 79 80
 
-          switch(g) {
+
+        if (g == 0 && this.grids[g].table[action.index].boxIndex == 8) {
+          g2 = 2;
+          action.index = action.index - 60;
+        } else if (g == 1 && this.grids[g].table[action.index].boxIndex == 6) {
+          g2 = 2;
+          action.index = action.index - 48;
+        } else if (g == 3 && this.grids[g].table[action.index].boxIndex == 2) {
+          g2 = 2;
+          action.index = action.index + 48;
+        } else if (g == 4 && this.grids[g].table[action.index].boxIndex == 0) {
+          g2 = 2;
+          action.index = action.index + 60;     
+        } else if (g == 2) {
+          switch (grids[g].table[action.index].boxIndex) {
             case 0:
-              if ((action.index >= 60 && action.index <= 62) ||
-                  (action.index >= 69 && action.index <= 71) ||
-                  (action.index >= 78 && action.index <= 80)) {
-                g2 = 2;
-                action.index = action.index - 60;
-              }
-              break;
-            case 1:
-              if ((action.index >= 54 && action.index <= 56) ||
-                  (action.index >= 63 && action.index <= 65) ||
-                  (action.index >= 72 && action.index <= 74)) {
-                g2 = 2;
-                action.index = action.index - 48;
-              }
+              g2 = 0;
+              action.index = action.index + 60;
               break;
             case 2:
-              if ((action.index >= 0 && action.index <= 2) ||
-                  (action.index >= 9 && action.index <= 11) ||
-                  (action.index >= 18 && action.index <= 20)) {
-                g2 = 0;
-                action.index = action.index + 60;
-              } else if ((action.index >= 6 && action.index <= 8) ||
-                         (action.index >= 15 && action.index <= 17) ||
-                         (action.index >= 24 && action.index <= 26)) {
-                g2 = 1;
-                action.index = action.index + 48;
-              } else if ((action.index >= 54 && action.index <= 56) ||
-                         (action.index >= 63 && action.index <= 65) ||
-                         (action.index >= 72 && action.index <= 74)) {
-                g2 = 3;
-                action.index = action.index - 48;
-              } else if ((action.index >= 60 && action.index <= 62) ||
-                         (action.index >= 69 && action.index <= 71) ||
-                         (action.index >= 78 && action.index <= 80)) {
-                g2 = 4;
-                action.index = action.index - 60;
-              }
+              g2 = 1;
+              action.index = action.index + 48;
               break;
-            case 3:
-              if ((action.index >= 6 && action.index <= 8) ||
-                  (action.index >= 15 && action.index <= 17) ||
-                  (action.index >= 24 && action.index <= 26)) {
-                g2 = 2;
-                action.index = action.index + 48;
-              }
+            case 6:
+              g2 = 3;
+              action.index = action.index - 48;
               break;
-            case 4:
-              if ((action.index >= 0 && action.index <= 2) ||
-                  (action.index >= 9 && action.index <= 11) ||
-                  (action.index >= 18 && action.index <= 20)) {
-                g2 = 2;
-                action.index = action.index + 60;
-              }
+            case 8:
+              g2 = 4;
+              action.index = action.index - 60;
               break;
             default: break;
           }
-
-          if (g2 != -1) {
-            //alert(action);
-            action.execute(this.grids[g2]);
-          }
+        } else {
+          alert("Samurai.duplicateSteps(): Invalid grid id: " + g);
         }
-        steps.shift();
+        
+/*
+        switch(g) {
+          case 0:
+            if ((action.index >= 60 && action.index <= 62) ||
+                (action.index >= 69 && action.index <= 71) ||
+                (action.index >= 78 && action.index <= 80)) {
+              g2 = 2;
+              action.index = action.index - 60;
+            }
+            break;
+          case 1:
+            if ((action.index >= 54 && action.index <= 56) ||
+                (action.index >= 63 && action.index <= 65) ||
+                (action.index >= 72 && action.index <= 74)) {
+              g2 = 2;
+              action.index = action.index - 48;
+            }
+            break;
+          case 2:
+            if ((action.index >= 0 && action.index <= 2) ||
+                (action.index >= 9 && action.index <= 11) ||
+                (action.index >= 18 && action.index <= 20)) {
+              g2 = 0;
+              action.index = action.index + 60;
+            } else if ((action.index >= 6 && action.index <= 8) ||
+                       (action.index >= 15 && action.index <= 17) ||
+                       (action.index >= 24 && action.index <= 26)) {
+              g2 = 1;
+              action.index = action.index + 48;
+            } else if ((action.index >= 54 && action.index <= 56) ||
+                       (action.index >= 63 && action.index <= 65) ||
+                       (action.index >= 72 && action.index <= 74)) {
+              g2 = 3;
+              action.index = action.index - 48;
+            } else if ((action.index >= 60 && action.index <= 62) ||
+                       (action.index >= 69 && action.index <= 71) ||
+                       (action.index >= 78 && action.index <= 80)) {
+              g2 = 4;
+              action.index = action.index - 60;
+            }
+            break;
+          case 3:
+            if ((action.index >= 6 && action.index <= 8) ||
+                (action.index >= 15 && action.index <= 17) ||
+                (action.index >= 24 && action.index <= 26)) {
+              g2 = 2;
+              action.index = action.index + 48;
+            }
+            break;
+          case 4:
+            if ((action.index >= 0 && action.index <= 2) ||
+                (action.index >= 9 && action.index <= 11) ||
+                (action.index >= 18 && action.index <= 20)) {
+              g2 = 2;
+              action.index = action.index + 60;
+            }
+            break;
+          default: break;
+        }
+*/
+        
+        if (g2 != -1) {
+          //alert(action);
+          action.execute(this.grids[g2]);
+        }
       }
+      
+      steps.shift();
     }
   }
 
