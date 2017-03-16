@@ -189,7 +189,7 @@ function Samurai() {
           g2 = 2;
           action.index = action.index + 60;     
         } else if (g == 2) {
-          switch (grids[g].table[action.index].boxIndex) {
+          switch (this.grids[2].table[action.index].boxIndex) {
             case 0:
               g2 = 0;
               action.index = action.index + 60;
