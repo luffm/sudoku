@@ -1,6 +1,50 @@
 // -----------------------------------------------------------------------------
 // Samurai object
 // -----------------------------------------------------------------------------
+// MIT License
+//
+// Copyright (c) 2017 M. Luff
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+// -----------------------------------------------------------------------------
+
+// 00 01 02 | 03 04 05 | 06 07 08
+// 09 10 11 | 12 13 14 | 15 16 17
+// 18 19 20 | 21 22 23 | 24 25 26
+// ---------+----------+---------
+// 27 28 29 | 30 31 32 | 33 34 35
+// 36 37 38 | 39 40 41 | 42 43 44
+// 45 46 47 | 48 49 50 | 51 52 53
+// ---------+----------+---------
+// 54 55 56 | 57 58 59 | 60 61 62
+// 63 64 65 | 66 67 68 | 69 70 71
+// 72 73 74 | 75 76 77 | 78 79 80
+
+      // 0 1 2   0 1 2
+      // 3 4 5   3 4 5
+      // 6 7 8   6 7 8
+      //     0 1 2
+      //     3 4 5
+      //     6 7 8
+      // 0 1 2   0 1 2
+      // 3 4 5   3 4 5
+      // 6 7 8   6 7 8
 
 function Samurai() {
   this.grids = [];        // Grid[]
@@ -131,19 +175,6 @@ function Samurai() {
       for (var act_i = 0; act_i < steps[0].actions.length; act_i++) {
         var action = steps[0].actions[act_i];
         var g2 = -1; // int
-
-// 00 01 02 | 03 04 05 | 06 07 08
-// 09 10 11 | 12 13 14 | 15 16 17
-// 18 19 20 | 21 22 23 | 24 25 26
-// ---------+----------+---------
-// 27 28 29 | 30 31 32 | 33 34 35
-// 36 37 38 | 39 40 41 | 42 43 44
-// 45 46 47 | 48 49 50 | 51 52 53
-// ---------+----------+---------
-// 54 55 56 | 57 58 59 | 60 61 62
-// 63 64 65 | 66 67 68 | 69 70 71
-// 72 73 74 | 75 76 77 | 78 79 80
-
 
         if (g == 0 && this.grids[g].table[action.index].boxIndex == 8) {
           g2 = 2;
@@ -485,15 +516,7 @@ function Samurai() {
 
       var dupGridId = -1;    // int - duplicate grid
       var dupCellIndex = -1; // int - duplicate cell index
-      // 0 1 2   0 1 2
-      // 3 4 5   3 4 5
-      // 6 7 8   6 7 8
-      //     0 1 2
-      //     3 4 5
-      //     6 7 8
-      // 0 1 2   0 1 2
-      // 3 4 5   3 4 5
-      // 6 7 8   6 7 8
+
       if ((i == 0 && cell.boxIndex == 8) || (i == 1 && cell.boxIndex == 6) ||
           (i == 2 && (cell.boxIndex == 0 || cell.boxIndex == 2 || cell.boxIndex == 6 || cell.boxIndex == 8)) ||
           (i == 3 && cell.boxIndex == 2) || (i == 4 && cell.boxIndex == 0)) {
@@ -572,7 +595,7 @@ function Samurai() {
 
   //for (var g = 0; g < 5; g++) alert(this.grids[g]);
 
-  alert("After solve: "+this.grids[0].debug()+"\n"+ this.grids[2].debug());
+  //alert("After solve: "+this.grids[0].debug()+"\n"+ this.grids[2].debug());
   //alert("Centre Grid\n"+this.grids[2].debug());
 
 } // End of Samurai object
