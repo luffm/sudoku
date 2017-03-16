@@ -177,8 +177,6 @@ function Samurai() {
               break;
             default: break;
           }
-        } else {
-          alert("Samurai.duplicateSteps(): Invalid grid id: " + g);
         }
         
 /*
