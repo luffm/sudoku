@@ -1062,26 +1062,25 @@
   //samurai.paint();
 
 
-/*
-  if (1) {
-    sudoku.selection = -1;
-    sudoku.locked = true;
-    sudoku.creating = true;
-    var level; // int
-    do {
-      level = sudoku.newPuzzle();
-      sudoku.steps = [];
-    } while (level != sudoku.newLevel);
+  window.addEventListener("keyup", function (event) {
 
-    //sudoku.valid = sudoku.grid.isValid();
-    sudoku.saveGrid();
-    sudoku.creating = false;
-    sudoku.locked = false;
+    if (event.defaultPrevented) {
+      return; // Do nothing if the event was already processed
+    }
 
-    sudoku.paint();
-  }
-*/
+    switch (event.key.toUpperCase()) {
+      case "S":
+        for (var i = 0; i < 5; i++) samurai.grids[i].initialise();
+        samurai.solveAll(debug = true);
+        for (var i = 0; i < 5; i++) samurai.grids[i].finalise();
+        samurai.paint();
+        break;
+      default: break;
+    }
 
+    // Cancel the default action to avoid it being handled twice
+    event.preventDefault();
+  }, true);
 </script>
 
 </html>

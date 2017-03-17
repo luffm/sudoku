@@ -209,68 +209,7 @@ function Samurai() {
             default: break;
           }
         }
-        
-/*
-        switch(g) {
-          case 0:
-            if ((action.index >= 60 && action.index <= 62) ||
-                (action.index >= 69 && action.index <= 71) ||
-                (action.index >= 78 && action.index <= 80)) {
-              g2 = 2;
-              action.index = action.index - 60;
-            }
-            break;
-          case 1:
-            if ((action.index >= 54 && action.index <= 56) ||
-                (action.index >= 63 && action.index <= 65) ||
-                (action.index >= 72 && action.index <= 74)) {
-              g2 = 2;
-              action.index = action.index - 48;
-            }
-            break;
-          case 2:
-            if ((action.index >= 0 && action.index <= 2) ||
-                (action.index >= 9 && action.index <= 11) ||
-                (action.index >= 18 && action.index <= 20)) {
-              g2 = 0;
-              action.index = action.index + 60;
-            } else if ((action.index >= 6 && action.index <= 8) ||
-                       (action.index >= 15 && action.index <= 17) ||
-                       (action.index >= 24 && action.index <= 26)) {
-              g2 = 1;
-              action.index = action.index + 48;
-            } else if ((action.index >= 54 && action.index <= 56) ||
-                       (action.index >= 63 && action.index <= 65) ||
-                       (action.index >= 72 && action.index <= 74)) {
-              g2 = 3;
-              action.index = action.index - 48;
-            } else if ((action.index >= 60 && action.index <= 62) ||
-                       (action.index >= 69 && action.index <= 71) ||
-                       (action.index >= 78 && action.index <= 80)) {
-              g2 = 4;
-              action.index = action.index - 60;
-            }
-            break;
-          case 3:
-            if ((action.index >= 6 && action.index <= 8) ||
-                (action.index >= 15 && action.index <= 17) ||
-                (action.index >= 24 && action.index <= 26)) {
-              g2 = 2;
-              action.index = action.index + 48;
-            }
-            break;
-          case 4:
-            if ((action.index >= 0 && action.index <= 2) ||
-                (action.index >= 9 && action.index <= 11) ||
-                (action.index >= 18 && action.index <= 20)) {
-              g2 = 2;
-              action.index = action.index + 60;
-            }
-            break;
-          default: break;
-        }
-*/
-        
+
         if (g2 != -1) {
           //alert(action);
           action.execute(this.grids[g2]);
@@ -285,14 +224,20 @@ function Samurai() {
   // SOLVE WITH PATTERN RECOGNITION
   //----------------------------------------------------------------------------
 
-  this.solveAll = function() { // (void)->int
+  this.solveAll = function(debug = false) { // (boolean)->int
+
+    if (debug) {
+      for (var i = 0; i < 5; i++) alert("grid["+i+"]\n\n"+this.grids[i].debug());
+    }
 
     var remaining = -1; // int
     var count;          // int
     var found = true;   // boolean
     var loop = true;    // boolean
 
-    while (loop) {
+    for (var g = 0; g < 5; g++) this.duplicateSteps(this.grids[g].nakedPatterns(1), g);
+
+    do {
 
       count = 0;
       do {
@@ -301,20 +246,19 @@ function Samurai() {
           //alert("yoyo:"+g+" found="+found+" count="+count);
           remaining = this.grids[g].remaining();
           this.duplicateSteps(this.grids[g].hiddenPatterns(1), g);
-          this.duplicateSteps(this.grids[g].nakedPatterns(1), g);
+          //this.duplicateSteps(this.grids[g].nakedPatterns(1), g);
           //this.duplicateSteps(this.grids[g].lockedCandidates1(), g);
           //this.duplicateSteps(this.grids[g].lockedCandidates2(), g);
-          //this.grids[g].hiddenPatterns(2);
-          //this.grids[g].nakedPatterns(2);
-
-        //this.addSteps(this.grids[g].hiddenPatterns(3));
-        //this.addSteps(this.grids[g].nakedPatterns(3));
-        //this.addSteps(this.grids[g].xFishes(2));
-        //this.addSteps(this.grids[g].xyWings());
-        //this.addSteps(this.grids[g].hiddenPatterns(4));
-        //this.addSteps(this.grids[g].nakedPatterns(4));
-        //this.addSteps(this.grids[g].xFishes(3));
-        //this.addSteps(this.grids[g].xFishes(4));
+          //this.duplicateSteps(this.grids[g].hiddenPatterns(2), g);
+          //this.duplicateSteps(this.grids[g].nakedPatterns(2), g);
+          //this.duplicateSteps(this.grids[g].hiddenPatterns(3), g);
+          //this.duplicateSteps(this.grids[g].nakedPatterns(3), g);
+          //this.duplicateSteps(this.grids[g].xFishes(2), g);
+          //this.duplicateSteps(this.grids[g].xyWings(), g);
+          //this.duplicateSteps(this.grids[g].hiddenPatterns(4), g);
+          //this.duplicateSteps(this.grids[g].nakedPatterns(4), g);
+          //this.duplicateSteps(this.grids[g].xFishes(3), g);
+          //this.duplicateSteps(this.grids[g].xFishes(4), g);
 
           if (this.grids[g].remaining() != remaining) {
             count++;
@@ -325,10 +269,15 @@ function Samurai() {
       } while (found);
 
       if (count == 0) loop = false;
+    } while (loop);
+
+    for (var g = 0; g < 5; g++) this.duplicateSteps(this.grids[g].nakedPatterns(1), g);
+
+    if (debug) {
+      for (var i = 0; i < 5; i++) alert("grid["+i+"]\n\n"+this.grids[i].debug());
     }
 
     return 0;
-
   }
 
 
@@ -553,14 +502,7 @@ function Samurai() {
       cell.setAllBits();
 
       this.solveAll();
-/*
-      alert(" 0: " + this.grids[0].isSolved() +
-            " 1: " + this.grids[1].isSolved() +
-            " 2: " + this.grids[2].isSolved() +
-            " 3: " + this.grids[3].isSolved() +
-            " 4: " + this.grids[4].isSolved() +
-            "\n\n" + this.grids[2]);
-*/
+
       var solved = this.grids[0].isSolved() && this.grids[1].isSolved() &&
                    this.grids[2].isSolved() && this.grids[3].isSolved() &&
                    this.grids[4].isSolved();
