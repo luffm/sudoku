@@ -302,8 +302,8 @@ function Samurai() {
           remaining = this.grids[g].remaining();
           this.duplicateSteps(this.grids[g].hiddenPatterns(1), g);
           this.duplicateSteps(this.grids[g].nakedPatterns(1), g);
-          this.duplicateSteps(this.grids[g].lockedCandidates1(), g);
-          this.duplicateSteps(this.grids[g].lockedCandidates2(), g);
+          //this.duplicateSteps(this.grids[g].lockedCandidates1(), g);
+          //this.duplicateSteps(this.grids[g].lockedCandidates2(), g);
           //this.grids[g].hiddenPatterns(2);
           //this.grids[g].nakedPatterns(2);
 
