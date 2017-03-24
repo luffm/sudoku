@@ -24,7 +24,9 @@
 // SOFTWARE.
 // -----------------------------------------------------------------------------
 
-function Cell(s = '') { // String
+function Cell(s) { // String
+  if (s == undefined) s = "";
+
   this.bits = new Array(9);   // boolean
   this.nextRowElement = null; // Cell
   this.nextColElement = null; // Cell
@@ -40,7 +42,8 @@ function Cell(s = '') { // String
     if (s == '') s = "123456789";
 
     for (var i = 0; i < 9; i++) {
-      if (s.includes((i+1).toString())) {
+      if (s.indexOf((i+1).toString()) >= 0) {
+      //if (s.includes((i+1).toString())) {
         this.setBit(i);
       } else {
         this.unsetBit(i);
